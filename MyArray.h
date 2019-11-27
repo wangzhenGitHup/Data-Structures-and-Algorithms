@@ -8,6 +8,8 @@ class MyArray
 public:
 	MyArray();
 	MyArray(int capacity);
+	MyArray(const MyArray& arr);
+	MyArray& operator=(const MyArray<T>& arr);
 	virtual ~MyArray();
 	void AddLast(T elem);
 	void AddFirst(T elem);
@@ -15,8 +17,7 @@ public:
 	int GetSize() { return _size; }
 	int GetCapacity() { return _capacity; }
 	bool IsEmpty() { return _size == 0; }
-	bool IsFull() { return _size >= _capacity; }
-	void PrintArrayElem();
+	bool IsFull();
 	T GetData(int pos);
 	bool Contains(T elem);
 	int Find(T elem);
@@ -28,6 +29,10 @@ public:
 
 private:
 	bool IsVailed(int pos);
+	bool resize(int capacity);
+	void PrintArrayInfo()const;
+	void copy(const MyArray& arr);
+	void copy(T* &tmpData, const MyArray& arr);
 
 private:
 	T* _data;
@@ -52,6 +57,47 @@ inline MyArray<T>::MyArray(int capacity)
 }
 
 template<class T>
+inline MyArray<T>::MyArray(const MyArray & arr)
+{
+	_data = new T[arr._capacity];
+	if (_data != nullptr)
+	{
+		copy(arr);
+		_size = arr._size;
+		_capacity = arr._capacity;
+	}
+}
+
+template<class T>
+inline MyArray<T> & MyArray<T>::operator=(const MyArray<T> & arr)
+{
+	if (this == &arr)
+	{
+		return *this;
+	}
+
+	if (_capacity == arr._capacity)
+	{
+		copy(arr);
+		_size = arr._size;
+
+		return *this;
+	}
+
+	T* tmpData = new T[arr._capacity];
+	if (tmpData != nullptr)
+	{
+		copy(tmpData, arr);
+		_size = arr._size;
+		_capacity = arr._capacity;
+		delete[]_data;
+		_data = tmpData;
+	}
+
+	return *this;
+}
+
+template<class T>
 inline MyArray<T>::~MyArray()
 {
 	delete[]_data;
@@ -61,18 +107,21 @@ inline MyArray<T>::~MyArray()
 template<class T>
 inline void MyArray<T>::AddLast(T elem)
 {
+	//O(1)
 	Insert(elem, _size);
 }
 
 template<class T>
 inline void MyArray<T>::AddFirst(T elem)
 {
+	//O(n)
 	Insert(elem, 0);
 }
 
 template<class T>
 inline void MyArray<T>::Insert(T elem, int pos)
 {
+	//O(n / 2) = O(n)
 	if (!IsFull() && IsVailed(pos))
 	{
 		for (int i = _size - 1; i >= pos; i--)
@@ -85,19 +134,54 @@ inline void MyArray<T>::Insert(T elem, int pos)
 }
 
 template<class T>
-inline void MyArray<T>::PrintArrayElem()
+inline bool MyArray<T>::IsFull()
 {
-	std::cout << "[ ";
-	for (int i = 0; i < _size; i++)
+	if (_size >= _capacity)
 	{
-		std::cout << _data[i] << " ";
+		if (resize(_capacity << 1))
+		{
+			return false;
+		}
+
+		return true;
 	}
-	std::cout << "]" << std::endl;
+	return false;
+}
+
+template<class T>
+inline void MyArray<T>::PrintArrayInfo() const
+{
+	std::cout << "ArrayInfo: size = " << _size << ", capacity = " << _capacity << std::endl;
+	std::cout << "------------------------------------------------" << std::endl;
+}
+
+template<class T>
+inline void MyArray<T>::copy(const MyArray & arr)
+{
+	//O(n)
+	for (int i = 0; i < arr._size; i++)
+	{
+		_data[i] = arr._data[i];
+	}
+}
+
+template<class T>
+inline void MyArray<T>::copy(T * &tmpData, const MyArray & arr)
+{
+	//O(n)
+	if (tmpData != nullptr)
+	{
+		for (int i = 0; i < arr._size; i++)
+		{
+			tmpData[i] = arr._data[i];
+		}
+	}
 }
 
 template<class T>
 inline T MyArray<T>::GetData(int pos)
 {
+	//O(1)
 	if (!IsVailed)
 	{
 		throw "Pos Error!";
@@ -108,6 +192,7 @@ inline T MyArray<T>::GetData(int pos)
 template<class T>
 inline bool MyArray<T>::Contains(T elem)
 {
+	//O(n)
 	for (int i = 0; i < _size; i++)
 	{
 		if (elem == _data[i])
@@ -121,6 +206,7 @@ inline bool MyArray<T>::Contains(T elem)
 template<class T>
 inline int MyArray<T>::Find(T elem)
 {
+	//O(n)
 	for (int i = 0; i < _size; i++)
 	{
 		if (elem == _data[i])
@@ -134,11 +220,18 @@ inline int MyArray<T>::Find(T elem)
 template<class T>
 inline T MyArray<T>::Remove(int pos)
 {
+	//O(n)
 	if (!IsVailed(pos))
 	{
 		throw "Index Error!";
 	}
 
+	//∑¿÷π∏¥‘”∂»’µ¥
+	if (_size <= (_capacity >> 2) &&
+		(_capacity >> 1) > 0)
+	{
+		resize(_capacity >> 1);
+	}
 	T tmp = _data[pos - 1];
 	for (int i = pos - 1; i < _size - 1; i++)
 	{
@@ -184,6 +277,26 @@ inline bool MyArray<T>::IsVailed(int pos)
 	return true;
 }
 
+template<class T>
+inline bool MyArray<T>::resize(int capacity)
+{
+	T* tmpData = new T[capacity];
+	if (tmpData != nullptr)
+	{
+		for (int i = 0; i < _size; i++)
+		{
+			tmpData[i] = _data[i];
+		}
+
+		delete[]_data;
+		_data = tmpData;
+		_capacity = capacity;
+		return true;
+	}
+
+	return false;
+}
+
 
 template<class T> 
 std::ostream& operator<<(std::ostream& out, const MyArray<T>& arr)
@@ -194,5 +307,7 @@ std::ostream& operator<<(std::ostream& out, const MyArray<T>& arr)
 		out << arr._data[i] << " ";
 	}
 	out << "]" << std::endl;
+
+	arr.PrintArrayInfo();
 	return out;
 }
