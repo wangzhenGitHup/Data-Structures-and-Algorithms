@@ -50,6 +50,7 @@ template<class T>
 inline ArrayStack<T> & ArrayStack<T>::operator=(const ArrayStack<T> & stack)
 {
 	_array = stack._array;
+	return *this;
 }
 
 template<class T>
@@ -109,5 +110,6 @@ std::ostream& operator<<(std::ostream& out, const ArrayStack<T>& stack)
 	}
 	out << "]" << std::endl;
 
+	out << "--------------------------" << std::endl;
 	return out;
 }
