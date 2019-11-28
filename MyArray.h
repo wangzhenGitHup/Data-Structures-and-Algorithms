@@ -14,11 +14,11 @@ public:
 	void AddLast(T elem);
 	void AddFirst(T elem);
 	void Insert(T elem, int pos);
-	int GetSize() { return _size; }
+	int GetSize()const { return _size; }
 	int GetCapacity() { return _capacity; }
 	bool IsEmpty() { return _size == 0; }
 	bool IsFull();
-	T GetData(int pos);
+	T GetData(int pos)const;
 	bool Contains(T elem);
 	int Find(T elem);
 	T Remove(int pos);
@@ -27,8 +27,12 @@ public:
 	bool RemoveElem(T elem);
 	template<class T> friend std::ostream& operator<<(std::ostream& out, const MyArray<T>& arr);
 
+protected:
+	T GetLastElem();
+	T GetFirstElem();
+
 private:
-	bool IsVailed(int pos);
+	bool IsVailed(int pos)const;
 	bool resize(int capacity);
 	void PrintArrayInfo()const;
 	void copy(const MyArray& arr);
@@ -179,10 +183,10 @@ inline void MyArray<T>::copy(T * &tmpData, const MyArray & arr)
 }
 
 template<class T>
-inline T MyArray<T>::GetData(int pos)
+inline T MyArray<T>::GetData(int pos)const
 {
 	//O(1)
-	if (!IsVailed)
+	if (!IsVailed(pos))
 	{
 		throw "Pos Error!";
 	}
@@ -268,7 +272,19 @@ inline bool MyArray<T>::RemoveElem(T elem)
 }
 
 template<class T>
-inline bool MyArray<T>::IsVailed(int pos)
+inline T MyArray<T>::GetLastElem()
+{
+	return GetData(_size - 1);
+}
+
+template<class T>
+inline T MyArray<T>::GetFirstElem()
+{
+	return GetData(0);
+}
+
+template<class T>
+inline bool MyArray<T>::IsVailed(int pos)const
 {
 	if (pos >= _capacity || pos < 0)
 	{
