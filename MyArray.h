@@ -27,7 +27,6 @@ public:
 	bool RemoveElem(T elem);
 	template<class T> friend std::ostream& operator<<(std::ostream& out, const MyArray<T>& arr);
 
-protected:
 	T GetLastElem();
 	T GetFirstElem();
 
