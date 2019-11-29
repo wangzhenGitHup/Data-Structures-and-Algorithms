@@ -18,19 +18,26 @@ bool MatchSignLA(const char* sign)
 		}
 		else
 		{
+			if (charStack.IsEmpty())
+			{
+				return false;
+			}
+
 			char topSign = charStack.Top();
-			if (topSign == '{' && (*sign) == '}')
+			if (topSign == '{' && (*sign) != '}')
 			{
-				charStack.Pop();
+				return false;
 			}
-			else if (topSign == '[' && (*sign) == ']')
+			else if (topSign == '[' && (*sign) != ']')
 			{
-				charStack.Pop();
+				return false;
 			}
-			else if (topSign == '(' && (*sign) == ')')
+			else if (topSign == '(' && (*sign) != ')')
 			{
-				charStack.Pop();
+				return false;
+
 			}
+			charStack.Pop();
 		}
 
 		sign++;
