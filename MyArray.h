@@ -249,7 +249,7 @@ inline T MyArray<T>::Remove(int pos)
 template<class T>
 inline T MyArray<T>::RemoveFirst()
 {
-	return Remove(0);
+	return Remove(1);
 }
 
 template<class T>
