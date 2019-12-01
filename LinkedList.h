@@ -66,19 +66,19 @@ inline LinkedList<T>::LinkedList(T elem)
 }
 
 template<class T>
-inline LinkedList<T>::LinkedList(const LinkedList & list)
+inline LinkedList<T>::LinkedList(const LinkedList<T> & list)
 {
 	_head = new Node();
 	if (_head != nullptr)
 	{
-		Node* pNode = list._head;
+		Node* pNode = list._head->_next;
 		while (pNode != nullptr)
 		{
 			Node* pNewNode = new Node(pNode->_data);
 			if (pNewNode != nullptr)
 			{
 				pNewNode->_next = _head->_next;
-				_head->next = pNewNode;
+				_head->_next = pNewNode;
 				pNode = pNode->_next;
 				_size++;
 			}
@@ -94,7 +94,7 @@ LinkedList<T>& LinkedList<T>::operator=(const LinkedList<T>& list)
 		return *this;
 	}
 
-	Node* pNode = list._head;
+	Node* pNode = list._head->_next;
 	_head = new Node();
 	if (!_head)
 	{
