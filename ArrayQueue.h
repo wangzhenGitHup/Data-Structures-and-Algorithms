@@ -23,71 +23,73 @@ private:
 	T GetData(int pos)const;
 
 private:
-	MyArray<T> _array;
+	MyArray<T> *_array = nullptr;
 };
 
 
 template<class T>
 ArrayQueue<T>::~ArrayQueue()
 {
-
+	delete _array;
+	_array = nullptr;
 }
 
 template<class T>
 ArrayQueue<T>::ArrayQueue()
 {
-	_array = MyArray<T>();
+	_array = new MyArray<T>();
 }
 
 template<class T>
 ArrayQueue<T>::ArrayQueue(int capacity)
 {
-	_array = MyArray<T>(capacity);
+	_array = new MyArray<T>(capacity);
 }
 
 template<class T>
 ArrayQueue<T>::ArrayQueue(const ArrayQueue& queue)
 {
-	_array = MyArray<T>(queue._array);
+	_array = new MyArray<T>(*queue._array);
 }
 
 
 template<class T>
 ArrayQueue<T>& ArrayQueue<T>::operator=(const ArrayQueue<T>& queue)
 {
-	_array = queue._array;
+	_array->operator=(*queue._array);
+	return *this;
 }
 
 template<class T>
 void ArrayQueue<T>::EnQueue(T elem)
 {
-	_array.AddLast(elem);
+	_array->AddLast(elem);
 }
 
 template<class T>
 T ArrayQueue<T>::DeQueue()
 {
-	return _array.RemoveFirst();
+	return _array->RemoveFirst();
 }
 
 
 template<class T>
 T ArrayQueue<T>::Front()
 {
-	return _array.GetFirstElem();
+	return _array->GetFirstElem();
 }
 
 
 template<class T>
 int ArrayQueue<T>::GetSize() const
 {
-	return _array.GetSize();
+	return _array->GetSize();
 }
 
 template<class T>
 bool ArrayQueue<T>::IsEmpty()
 {
-	return _array.IsEmpty();
+	return _array->IsEmpty();
 }
 
 template<class T>
@@ -109,5 +111,5 @@ std::ostream& operator<<(std::ostream& out, const ArrayQueue<T>& queue)
 template<class T>
 T ArrayQueue<T>::GetData(int pos)const
 {
-	return _array.GetData(pos);
+	return _array->GetData(pos);
 }

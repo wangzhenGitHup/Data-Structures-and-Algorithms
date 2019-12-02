@@ -25,79 +25,81 @@ private:
 	T GetData(int pos)const;
 
 private:
-	MyArray<T> _array;
+	MyArray<T>* _array = nullptr;
 };
 
 template<class T>
 inline ArrayStack<T>::ArrayStack()
 {
-	_array = MyArray<T>();
+	_array = new MyArray<T>();
 }
 
 template<class T>
 inline ArrayStack<T>::ArrayStack(int capacity)
 {
-	_array = MyArray<T>(capacity);
+	_array = new MyArray<T>(capacity);
 }
 
 template<class T>
 inline ArrayStack<T>::ArrayStack(const ArrayStack & stack)
 {
-	_array = MyArray<T>(stack._array);
+	_array = new MyArray<T>(*stack._array);
 }
 
 template<class T>
 inline ArrayStack<T> & ArrayStack<T>::operator=(const ArrayStack<T> & stack)
 {
-	_array = stack._array;
+	_array->operator=(*stack._array);
 	return *this;
 }
 
 template<class T>
 inline ArrayStack<T>::~ArrayStack()
 {
+	delete _array;
+	_array = nullptr;
 }
 
 template<class T>
 inline void ArrayStack<T>::Push(T elem)
 {
-	_array.AddLast(elem);
+	_array->AddLast(elem);
 }
 
 template<class T>
 inline T ArrayStack<T>::Pop()
 {
-	return _array.RemoveLast();
+	return _array->RemoveLast();
 }
 
 template<class T>
 inline T ArrayStack<T>::Top()
 {
-	return _array.GetLastElem();
+	return _array->GetLastElem();
 }
 
 template<class T>
 inline bool ArrayStack<T>::IsEmpty()
 {
-	return _array.IsEmpty();
+	return _array->IsEmpty();
 }
 
 template<class T>
 inline int ArrayStack<T>::GetSize()const
 {
-	return _array.GetSize();
+	return _array->GetSize();
 }
 
 template<class T>
 inline int ArrayStack<T>::GetCapacity()
 {
-	return _array.GetCapacity();
+	return _array->GetCapacity();
 }
 
 template<class T>
 inline T ArrayStack<T>::GetData(int pos)const
 {
-	return _array.GetData(pos);
+	return _array->GetData(pos);
 }
 
 template<class T>

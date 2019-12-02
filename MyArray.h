@@ -72,7 +72,7 @@ inline MyArray<T>::MyArray(const MyArray & arr)
 }
 
 template<class T>
-inline MyArray<T> & MyArray<T>::operator=(const MyArray<T> & arr)
+MyArray<T> & MyArray<T>::operator=(const MyArray<T>& arr)
 {
 	if (this == &arr)
 	{
