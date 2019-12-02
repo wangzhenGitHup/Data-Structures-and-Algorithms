@@ -38,7 +38,6 @@ public:
 	T Remove(int pos);
 	T RemoveFirst();
 	T RemoveLast();
-	Node<T>* RemoveElements(Node<T>* pNode, T elem);
 	void RemoveElements(T elem);
 
 	T GetData(int pos);
@@ -48,6 +47,7 @@ public:
 private:
 	bool isValied(int pos);
 	void copy(Node<T>* pNode);
+	Node<T>* RemoveElements(Node<T>* pNode, T elem);
 
 private:
 	Node<T>* _head;
@@ -233,7 +233,16 @@ inline Node<T> * LinkedListHead<T>::RemoveElements(Node<T> * pNode, T elem)
 	}
 
 	pNode->_next = RemoveElements(pNode->_next, elem);
-	return pNode->_data == elem ? pNode->_next : pNode;
+	Node<T>* pDelNode = pNode;
+	Node<T>* pTmpNode = pNode->_next;
+	bool isEqual = false;
+	if (pNode->_data == elem)
+	{
+		delete pDelNode;
+		pDelNode = nullptr;
+		isEqual = true;
+	}
+	return isEqual ? pTmpNode : pNode;
 }
 
 template<class T>
