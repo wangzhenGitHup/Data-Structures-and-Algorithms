@@ -29,10 +29,12 @@ public:
 	BinTree& operator=(const BinTree& tree);
 	virtual ~BinTree();
 	void AddChild(T elem);
-	
+	bool Contains(T elem);
+
 private:
-	void _addChild(TreeNode<T>* pRoot, T elem);
+	TreeNode<T>* addChild(TreeNode<T>* pRoot, T elem);
 	void copy(const TreeNode<T>* pRoot);
+	bool contains(const TreeNode<T>* pRoot, T elem);
 
 private:
 	TreeNode<T>* _root;
@@ -75,46 +77,33 @@ inline BinTree<T>::~BinTree()
 template<class T>
 inline void BinTree<T>::AddChild(T elem)
 {
-	if (_root == nullptr)
-	{
-		_root = new TreeNode<T>(elem);
-	}
-	else
-	{
-		_addChild(_root, elem);
-	}
+	_root = addChild(_root, elem);
 }
 
 template<class T>
-inline void BinTree<T>::_addChild(TreeNode<T>* pRoot, T elem)
+inline bool BinTree<T>::Contains(T elem)
 {
-	if (elem == pRoot->_data)
+	return contains(_root, elem);
+}
+
+template<class T>
+inline TreeNode<T>*  BinTree<T>::addChild(TreeNode<T>* pRoot, T elem)
+{
+	if (pRoot == nullptr)
 	{
-		return;
+		return new TreeNode<T>(elem);
 	}
 	
 	if (elem < pRoot->_data)
 	{
-		if (pRoot->_leftChild == nullptr)
-		{
-			pRoot->_leftChild = new TreeNode<T>(elem);
-		}
-		else
-		{
-			_addChild(pRoot->_leftChild, elem);
-		}
+		pRoot->_leftChild = addChild(pRoot->_leftChild, elem);
 	}
 	else if (elem > pRoot->_data)
 	{
-		if (pRoot->_rightChild == nullptr)
-		{
-			pRoot->_rightChild = new TreeNode<T>(elem);
-		}
-		else
-		{
-			_addChild(pRoot->_rightChild, elem);
-		}
+		pRoot->_rightChild = addChild(pRoot->_rightChild, elem);
 	}
+
+	return pRoot;
 }
 
 template<class T>
@@ -128,4 +117,28 @@ inline void BinTree<T>::copy(const TreeNode<T>* pRoot)
 	AddChild(pRoot->_data);
 	copy(pRoot->_leftChild);
 	copy(pRoot->_rightChild);
+}
+
+template<class T>
+inline bool BinTree<T>::contains(const TreeNode<T>* pRoot, T elem)
+{
+	if (pRoot == nullptr)
+	{
+		return false;
+	}
+
+	if (elem == pRoot->_data)
+	{
+		return true;
+	}
+
+	if (elem < pRoot->_data)
+	{
+		return contains(pRoot->_leftChild, elem);
+	}
+
+	if (elem > pRoot->_data)
+	{
+		return contains(pRoot->_rightChild, elem);
+	}
 }
