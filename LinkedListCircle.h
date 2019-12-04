@@ -49,6 +49,7 @@ public:
 private:
 	bool isValied(int pos);
 	void copy(ListNode<T>* pNode, ListNode<T>* pHead);
+	ListNode<T>* RemoveElements(ListNode<T>* pNode, T elem);
 
 private:
 	ListNode<T>* _head;
@@ -239,7 +240,7 @@ inline T LinkedListCircle<T>::RemoveLast()
 template<class T>
 inline void LinkedListCircle<T>::RemoveElements(T elem)
 {
-	RemoveElements(_head, elem);
+	RemoveElements(_head->_next, elem);
 }
 
 template<class T>
@@ -295,6 +296,30 @@ inline void LinkedListCircle<T>::copy(ListNode<T> * pNode, ListNode<T>* pHead)
 			_size++;
 		}
 	}
+}
+
+template<class T>
+inline ListNode<T> * LinkedListCircle<T>::RemoveElements(ListNode<T> * pNode, T elem)
+{
+	if (pNode == _head)
+	{
+		return _head;
+	}
+
+	pNode->_next = RemoveElements(pNode->_next, elem);
+
+	ListNode<T>* pDelNode = pNode;
+	ListNode<T>* pTmpNode = pNode->_next;
+	bool isEqual = false;
+	if (pNode->_data == elem)
+	{
+		_head->_next = pNode;
+		delete pDelNode;
+		pDelNode = nullptr;
+		isEqual = true;
+		_head->_next = pTmpNode;
+	}
+	return isEqual ? pTmpNode : pNode;
 }
 
 template<class T>
