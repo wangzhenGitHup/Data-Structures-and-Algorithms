@@ -32,6 +32,7 @@ public:
 	bool Contains(T elem);
 	void PreOrder();
 	void InOrder();
+	void PostOrder();
 
 private:
 	TreeNode<T>* addChild(TreeNode<T>* pRoot, T elem);
@@ -39,6 +40,7 @@ private:
 	bool contains(const TreeNode<T>* pRoot, T elem);
 	void preOrder(TreeNode<T>* pRoot);
 	void inOrder(TreeNode<T>* pRoot);
+	void postOrder(TreeNode<T>* pRoot);
 
 private:
 	TreeNode<T>* _root;
@@ -101,6 +103,13 @@ template<class T>
 inline void BinTree<T>::InOrder()
 {
 	inOrder(_root);
+	std::cout << std::endl;
+}
+
+template<class T>
+inline void BinTree<T>::PostOrder()
+{
+	postOrder(_root);
 	std::cout << std::endl;
 }
 
@@ -185,4 +194,16 @@ inline void BinTree<T>::inOrder(TreeNode<T>* pRoot)
 	inOrder(pRoot->_leftChild);
 	std::cout << pRoot->_data << " ";
 	inOrder(pRoot->_rightChild);
+}
+
+template<class T>
+inline void BinTree<T>::postOrder(TreeNode<T>* pRoot)
+{
+	if (pRoot == nullptr)
+	{
+		return;
+	}
+	postOrder(pRoot->_leftChild);
+	postOrder(pRoot->_rightChild);
+	std::cout << pRoot->_data << " ";
 }
