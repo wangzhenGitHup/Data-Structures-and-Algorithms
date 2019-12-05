@@ -30,11 +30,15 @@ public:
 	virtual ~BinTree();
 	void AddChild(T elem);
 	bool Contains(T elem);
+	void PreOrder();
+	void InOrder();
 
 private:
 	TreeNode<T>* addChild(TreeNode<T>* pRoot, T elem);
 	void copy(const TreeNode<T>* pRoot);
 	bool contains(const TreeNode<T>* pRoot, T elem);
+	void preOrder(TreeNode<T>* pRoot);
+	void inOrder(TreeNode<T>* pRoot);
 
 private:
 	TreeNode<T>* _root;
@@ -84,6 +88,20 @@ template<class T>
 inline bool BinTree<T>::Contains(T elem)
 {
 	return contains(_root, elem);
+}
+
+template<class T>
+inline void BinTree<T>::PreOrder()
+{
+	preOrder(_root);
+	std::cout << std::endl;
+}
+
+template<class T>
+inline void BinTree<T>::InOrder()
+{
+	inOrder(_root);
+	std::cout << std::endl;
 }
 
 template<class T>
@@ -141,4 +159,30 @@ inline bool BinTree<T>::contains(const TreeNode<T>* pRoot, T elem)
 	{
 		return contains(pRoot->_rightChild, elem);
 	}
+}
+
+template<class T>
+inline void BinTree<T>::preOrder(TreeNode<T>* pRoot)
+{
+	if (pRoot == nullptr)
+	{
+		return;
+	}
+
+	std::cout << pRoot->_data << " ";
+	preOrder(pRoot->_leftChild);
+	preOrder(pRoot->_rightChild);
+}
+
+template<class T>
+inline void BinTree<T>::inOrder(TreeNode<T>* pRoot)
+{
+	if (pRoot == nullptr)
+	{
+		return;
+	}
+
+	inOrder(pRoot->_leftChild);
+	std::cout << pRoot->_data << " ";
+	inOrder(pRoot->_rightChild);
 }
