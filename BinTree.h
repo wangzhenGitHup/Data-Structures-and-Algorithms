@@ -1,5 +1,6 @@
 #pragma once
 #include "ArrayStack.h"
+#include "ArrayQueue.h"
 
 template<typename E>
 struct TreeNode
@@ -36,6 +37,8 @@ public:
 	void InOrder();
 	void InOrderNR();
 	void PostOrder();
+	void PostOrderNR();
+	void LevelOrder();
 
 private:
 	TreeNode<T>* addChild(TreeNode<T>* pRoot, T elem);
@@ -173,6 +176,47 @@ template<class T>
 inline void BinTree<T>::PostOrder()
 {
 	postOrder(_root);
+	std::cout << std::endl;
+}
+
+template<class T>
+inline void BinTree<T>::PostOrderNR()
+{
+	if (_root == nullptr)
+	{
+		return;
+	}
+
+	TreeNode<T>* pNode = _root;
+}
+
+template<class T>
+inline void BinTree<T>::LevelOrder()
+{
+	if (_root == nullptr)
+	{
+		return;
+	}
+
+	TreeNode<T>* pNode = nullptr;
+	ArrayQueue<TreeNode<T>*> queue;
+	queue.EnQueue(_root);
+
+	while (!queue.IsEmpty())
+	{
+		pNode = queue.DeQueue();
+		std::cout << pNode->_data << " ";
+		if (pNode->_leftChild != nullptr)
+		{
+			queue.EnQueue(pNode->_leftChild);
+		}
+
+		if (pNode->_rightChild != nullptr)
+		{
+			queue.EnQueue(pNode->_rightChild);
+		}
+	}
+
 	std::cout << std::endl;
 }
 
