@@ -1,4 +1,5 @@
 #pragma once
+#include "ArrayStack.h"
 
 template<typename E>
 struct TreeNode
@@ -31,7 +32,9 @@ public:
 	void AddChild(T elem);
 	bool Contains(T elem);
 	void PreOrder();
+	void PreOrderNR();
 	void InOrder();
+	void InOrderNR();
 	void PostOrder();
 
 private:
@@ -100,9 +103,69 @@ inline void BinTree<T>::PreOrder()
 }
 
 template<class T>
+inline void BinTree<T>::PreOrderNR()
+{
+	if (_root == nullptr)
+	{
+		return;
+	}
+
+	TreeNode<T>* pNode = nullptr;
+	ArrayStack<TreeNode<T>*>stack;
+	stack.Push(_root);
+
+	while (!stack.IsEmpty())
+	{
+		pNode = stack.Pop();
+		std::cout << pNode->_data << " ";
+		
+		if (pNode->_rightChild != nullptr)
+		{
+			stack.Push(pNode->_rightChild);
+		}
+
+		if (pNode->_leftChild != nullptr)
+		{
+			stack.Push(pNode->_leftChild);
+		}
+	}
+
+	std::cout << std::endl;
+}
+
+template<class T>
 inline void BinTree<T>::InOrder()
 {
 	inOrder(_root);
+	std::cout << std::endl;
+}
+
+template<class T>
+inline void BinTree<T>::InOrderNR()
+{
+	if (_root == nullptr)
+	{
+		return;
+	}
+
+	ArrayStack<TreeNode<T>*> stack;
+	stack.Push(_root);
+
+	TreeNode<T>* pNode = _root->_leftChild;
+
+	while (!stack.IsEmpty() || pNode != nullptr)
+	{
+		while (pNode != nullptr)
+		{
+			stack.Push(pNode);
+			pNode = pNode->_leftChild;
+		}
+		
+		pNode = stack.Pop();
+		std::cout << pNode->_data << " ";
+		pNode = pNode->_rightChild;
+	}
+
 	std::cout << std::endl;
 }
 
