@@ -45,6 +45,8 @@ public:
 	void RemoveMaxNode();
 	int GetTreeHeight();
 	void RemoveElement(T elem);
+	int GetSize() { return _size; }
+	bool IsEmpty() { return _size == 0; }
 
 private:
 	TreeNode<T>* addChild(TreeNode<T>* pRoot, T elem);
@@ -59,9 +61,10 @@ private:
 	TreeNode<T>* removeMaxNode(TreeNode<T>* pRoot);
 	int getHeight(TreeNode<T>* pRoot);
 	TreeNode<T>* removeElement(TreeNode<T>* pRoot, T elem);
-
+	
 private:
 	TreeNode<T>* _root = nullptr;
+	int _size;
 };
 
 template<class T>
@@ -290,6 +293,7 @@ inline TreeNode<T>*  BinTree<T>::addChild(TreeNode<T>* pRoot, T elem)
 {
 	if (pRoot == nullptr)
 	{
+		_size++;
 		return new TreeNode<T>(elem);
 	}
 	
@@ -410,7 +414,7 @@ inline TreeNode<T>* BinTree<T>::removeMinNode(TreeNode<T>* pRoot)
 		TreeNode<T>* pNode = pRoot->_rightChild;
 		delete pRoot;
 		pRoot = nullptr;
-
+		_size--;
 		return pNode;
 	}
 
@@ -426,7 +430,7 @@ inline TreeNode<T>* BinTree<T>::removeMaxNode(TreeNode<T>* pRoot)
 		TreeNode<T>* pNode = pRoot->_leftChild;
 		delete pRoot;
 		pRoot = nullptr;
-
+		_size--;
 		return pNode;
 	}
 	pRoot->_rightChild = removeMaxNode(pRoot->_rightChild);
@@ -467,6 +471,7 @@ inline TreeNode<T>* BinTree<T>::removeElement(TreeNode<T>* pRoot, T elem)
 		TreeNode<T>* pNode = pRoot->_rightChild;
 		delete pRoot;
 		pRoot = nullptr;
+		_size--;
 		return pNode;
 	}
 
@@ -475,6 +480,7 @@ inline TreeNode<T>* BinTree<T>::removeElement(TreeNode<T>* pRoot, T elem)
 		TreeNode<T>* pNode = pRoot->_leftChild;
 		delete pRoot;
 		pRoot = nullptr;
+		_size--;
 		return pNode;
 	}
 
@@ -484,6 +490,7 @@ inline TreeNode<T>* BinTree<T>::removeElement(TreeNode<T>* pRoot, T elem)
 	
 	delete pSuccessor;
 	pSuccessor = nullptr;
+	_size--;
 
 	return pRoot;
 }
