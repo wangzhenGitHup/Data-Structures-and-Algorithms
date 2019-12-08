@@ -39,6 +39,12 @@ public:
 	void PostOrder();
 	void PostOrderNR();
 	void LevelOrder();
+	T FindMinNode();
+	T FindMaxNode();
+	void RemoveMinNode();
+	void RemoveMaxNode();
+	int GetTreeHeight();
+	void RemoveElement(T elem);
 
 private:
 	TreeNode<T>* addChild(TreeNode<T>* pRoot, T elem);
@@ -47,9 +53,15 @@ private:
 	void preOrder(TreeNode<T>* pRoot);
 	void inOrder(TreeNode<T>* pRoot);
 	void postOrder(TreeNode<T>* pRoot);
+	TreeNode<T>* findMinNode(TreeNode<T>* pRoot);
+	TreeNode<T>* findMaxNode(TreeNode<T>* pRoot);
+	TreeNode<T>* removeMinNode(TreeNode<T>* pRoot);
+	TreeNode<T>* removeMaxNode(TreeNode<T>* pRoot);
+	int getHeight(TreeNode<T>* pRoot);
+	TreeNode<T>* removeElement(TreeNode<T>* pRoot, T elem);
 
 private:
-	TreeNode<T>* _root;
+	TreeNode<T>* _root = nullptr;
 };
 
 template<class T>
@@ -221,6 +233,59 @@ inline void BinTree<T>::LevelOrder()
 }
 
 template<class T>
+inline T BinTree<T>::FindMinNode()
+{
+	TreeNode<T>*pNode = findMinNode(_root);
+	if (pNode != nullptr)
+	{
+		return pNode->_data;
+	}
+
+	throw "BinTree Error!";
+}
+
+template<class T>
+inline T BinTree<T>::FindMaxNode()
+{
+	TreeNode<T>*pNode = findMaxNode(_root);
+	if (pNode != nullptr)
+	{
+		return pNode->_data;
+	}
+
+	throw "BinTree Error!";
+}
+
+template<class T>
+inline void BinTree<T>::RemoveMinNode()
+{
+	removeMinNode(_root);
+}
+
+template<class T>
+inline void BinTree<T>::RemoveMaxNode()
+{
+	removeMaxNode(_root);
+}
+
+template<class T>
+inline int BinTree<T>::GetTreeHeight()
+{
+	return getHeight(_root);
+}
+
+template<class T>
+inline void BinTree<T>::RemoveElement(T elem)
+{
+	if (_root == nullptr)
+	{
+		return;
+	}
+
+	_root = removeElement(_root, elem);
+}
+
+template<class T>
 inline TreeNode<T>*  BinTree<T>::addChild(TreeNode<T>* pRoot, T elem)
 {
 	if (pRoot == nullptr)
@@ -313,4 +378,112 @@ inline void BinTree<T>::postOrder(TreeNode<T>* pRoot)
 	postOrder(pRoot->_leftChild);
 	postOrder(pRoot->_rightChild);
 	std::cout << pRoot->_data << " ";
+}
+
+template<class T>
+inline TreeNode<T>* BinTree<T>::findMinNode(TreeNode<T>* pRoot)
+{
+	if (pRoot->_leftChild == nullptr)
+	{
+		return pRoot;
+	}
+
+	return findMinNode(pRoot->_leftChild);
+}
+
+template<class T>
+inline TreeNode<T>* BinTree<T>::findMaxNode(TreeNode<T>* pRoot)
+{
+	if (pRoot->_rightChild == nullptr)
+	{
+		return pRoot;
+	}
+
+	return findMaxNode(pRoot->_rightChild);
+}
+
+template<class T>
+inline TreeNode<T>* BinTree<T>::removeMinNode(TreeNode<T>* pRoot)
+{
+	if (pRoot->_leftChild == nullptr)
+	{
+		TreeNode<T>* pNode = pRoot->_rightChild;
+		delete pRoot;
+		pRoot = nullptr;
+
+		return pNode;
+	}
+
+	pRoot->_leftChild = removeMinNode(pRoot->_leftChild);
+	return pRoot;
+}
+
+template<class T>
+inline TreeNode<T>* BinTree<T>::removeMaxNode(TreeNode<T>* pRoot)
+{
+	if (pRoot->_rightChild == nullptr)
+	{
+		TreeNode<T>* pNode = pRoot->_leftChild;
+		delete pRoot;
+		pRoot = nullptr;
+
+		return pNode;
+	}
+	pRoot->_rightChild = removeMaxNode(pRoot->_rightChild);
+	return pRoot;
+}
+
+template<class T>
+inline int BinTree<T>::getHeight(TreeNode<T>* pRoot)
+{
+	if (pRoot == nullptr)
+	{
+		return 0;
+	}
+
+	int leftH = getHeight(pRoot->_leftChild);
+	int rightH = getHeight(pRoot->_rightChild);
+	return leftH > rightH ? (leftH + 1) : (rightH + 1);
+}
+
+template<class T>
+inline TreeNode<T>* BinTree<T>::removeElement(TreeNode<T>* pRoot, T elem)
+{
+	if (elem < pRoot->_data)
+	{
+		pRoot->_leftChild = removeElement(pRoot->_leftChild, elem);
+		return pRoot;
+	}
+
+	if (elem > pRoot->_data)
+	{
+		pRoot->_rightChild = removeElement(pRoot->_rightChild, elem);
+		return pRoot;
+	}
+
+	//elem == pRoot->_data
+	if (pRoot->_leftChild == nullptr)
+	{
+		TreeNode<T>* pNode = pRoot->_rightChild;
+		delete pRoot;
+		pRoot = nullptr;
+		return pNode;
+	}
+
+	if (pRoot->_rightChild == nullptr)
+	{
+		TreeNode<T>* pNode = pRoot->_leftChild;
+		delete pRoot;
+		pRoot = nullptr;
+		return pNode;
+	}
+
+	TreeNode<T>* pSuccessor = findMinNode(pRoot);
+	pRoot->_data = pSuccessor->_data;
+	pRoot->_leftChild = pSuccessor->_leftChild;
+	
+	delete pSuccessor;
+	pSuccessor = nullptr;
+
+	return pRoot;
 }
