@@ -30,6 +30,8 @@ public:
 	T GetLastElem();
 	T GetFirstElem();
 
+	void Swap(int idx1, int idx2);
+
 private:
 	bool IsVailed(int pos)const;
 	bool resize(int capacity);
@@ -44,7 +46,7 @@ private:
 };
 
 template<class T>
-inline MyArray<T>::MyArray()
+MyArray<T>::MyArray()
 {
 	_size = 0;
 	_capacity = 10;
@@ -52,7 +54,7 @@ inline MyArray<T>::MyArray()
 }
 
 template<class T>
-inline MyArray<T>::MyArray(int capacity)
+MyArray<T>::MyArray(int capacity)
 {
 	_size = 0;
 	_capacity = capacity;
@@ -60,7 +62,7 @@ inline MyArray<T>::MyArray(int capacity)
 }
 
 template<class T>
-inline MyArray<T>::MyArray(const MyArray & arr)
+MyArray<T>::MyArray(const MyArray & arr)
 {
 	_data = new T[arr._capacity];
 	if (_data != nullptr)
@@ -101,28 +103,28 @@ MyArray<T> & MyArray<T>::operator=(const MyArray<T>& arr)
 }
 
 template<class T>
-inline MyArray<T>::~MyArray()
+MyArray<T>::~MyArray()
 {
 	delete[]_data;
 	_data = nullptr;
 }
 
 template<class T>
-inline void MyArray<T>::AddLast(T elem)
+void MyArray<T>::AddLast(T elem)
 {
 	//O(1)
 	Insert(elem, _size);
 }
 
 template<class T>
-inline void MyArray<T>::AddFirst(T elem)
+void MyArray<T>::AddFirst(T elem)
 {
 	//O(n)
 	Insert(elem, 0);
 }
 
 template<class T>
-inline void MyArray<T>::Insert(T elem, int pos)
+void MyArray<T>::Insert(T elem, int pos)
 {
 	//O(n / 2) = O(n)
 	if (!IsFull() && IsVailed(pos))
@@ -137,7 +139,7 @@ inline void MyArray<T>::Insert(T elem, int pos)
 }
 
 template<class T>
-inline bool MyArray<T>::IsFull()
+bool MyArray<T>::IsFull()
 {
 	if (_size >= _capacity)
 	{
@@ -152,14 +154,14 @@ inline bool MyArray<T>::IsFull()
 }
 
 template<class T>
-inline void MyArray<T>::PrintArrayInfo() const
+void MyArray<T>::PrintArrayInfo() const
 {
 	std::cout << "ArrayInfo: size = " << _size << ", capacity = " << _capacity << std::endl;
 	std::cout << "------------------------------------------------" << std::endl;
 }
 
 template<class T>
-inline void MyArray<T>::copy(const MyArray & arr)
+void MyArray<T>::copy(const MyArray & arr)
 {
 	//O(n)
 	for (int i = 0; i < arr._size; i++)
@@ -169,7 +171,7 @@ inline void MyArray<T>::copy(const MyArray & arr)
 }
 
 template<class T>
-inline void MyArray<T>::copy(T * &tmpData, const MyArray & arr)
+void MyArray<T>::copy(T * &tmpData, const MyArray & arr)
 {
 	//O(n)
 	if (tmpData != nullptr)
@@ -182,7 +184,7 @@ inline void MyArray<T>::copy(T * &tmpData, const MyArray & arr)
 }
 
 template<class T>
-inline T MyArray<T>::GetData(int pos)const
+T MyArray<T>::GetData(int pos)const
 {
 	//O(1)
 	if (!IsVailed(pos))
@@ -193,7 +195,7 @@ inline T MyArray<T>::GetData(int pos)const
 }
 
 template<class T>
-inline bool MyArray<T>::Contains(T elem)
+bool MyArray<T>::Contains(T elem)
 {
 	//O(n)
 	for (int i = 0; i < _size; i++)
@@ -207,7 +209,7 @@ inline bool MyArray<T>::Contains(T elem)
 }
 
 template<class T>
-inline int MyArray<T>::Find(T elem)
+int MyArray<T>::Find(T elem)
 {
 	//O(n)
 	for (int i = 0; i < _size; i++)
@@ -221,7 +223,7 @@ inline int MyArray<T>::Find(T elem)
 }
 
 template<class T>
-inline T MyArray<T>::Remove(int pos)
+T MyArray<T>::Remove(int pos)
 {
 	//O(n)
 	if (!IsVailed(pos))
@@ -247,19 +249,19 @@ inline T MyArray<T>::Remove(int pos)
 }
 
 template<class T>
-inline T MyArray<T>::RemoveFirst()
+T MyArray<T>::RemoveFirst()
 {
 	return Remove(1);
 }
 
 template<class T>
-inline T MyArray<T>::RemoveLast()
+T MyArray<T>::RemoveLast()
 {
 	return Remove(_size);
 }
 
 template<class T>
-inline bool MyArray<T>::RemoveElem(T elem)
+bool MyArray<T>::RemoveElem(T elem)
 {
 	int idx = Find(elem);
 	if (idx < 0)
@@ -271,19 +273,27 @@ inline bool MyArray<T>::RemoveElem(T elem)
 }
 
 template<class T>
-inline T MyArray<T>::GetLastElem()
+T MyArray<T>::GetLastElem()
 {
 	return GetData(_size - 1);
 }
 
 template<class T>
-inline T MyArray<T>::GetFirstElem()
+T MyArray<T>::GetFirstElem()
 {
 	return GetData(0);
 }
 
 template<class T>
-inline bool MyArray<T>::IsVailed(int pos)const
+void MyArray<T>::Swap(int idx1, int idx2)
+{
+	T tmpElem = _data[idx1];
+	_data[idx1] = _data[idx2];
+	_data[idx2] = tmpElem;
+}
+
+template<class T>
+bool MyArray<T>::IsVailed(int pos)const
 {
 	if (pos >= _capacity || pos < 0)
 	{
@@ -293,7 +303,7 @@ inline bool MyArray<T>::IsVailed(int pos)const
 }
 
 template<class T>
-inline bool MyArray<T>::resize(int capacity)
+bool MyArray<T>::resize(int capacity)
 {
 	T* tmpData = new T[capacity];
 	if (tmpData != nullptr)
