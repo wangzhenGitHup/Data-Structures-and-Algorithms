@@ -61,7 +61,7 @@ private:
 	TreeNode<T>* removeMaxNode(TreeNode<T>* pRoot);
 	int getHeight(TreeNode<T>* pRoot);
 	TreeNode<T>* removeElement(TreeNode<T>* pRoot, T elem);
-	
+	void removeNode();
 private:
 	TreeNode<T>* _root = nullptr;
 	int _size;
@@ -99,6 +99,7 @@ inline BinTree<T> & BinTree<T>::operator=(const BinTree<T> & tree)
 template<class T>
 inline BinTree<T>::~BinTree()
 {
+	removeNode();
 }
 
 template<class T>
@@ -286,6 +287,41 @@ inline void BinTree<T>::RemoveElement(T elem)
 	}
 
 	_root = removeElement(_root, elem);
+}
+
+template<class T>
+inline void BinTree<T>::removeNode()
+{
+	if (_root == nullptr)
+	{
+		return;
+	}
+
+	ArrayStack<TreeNode<T>**> stack;
+	stack.Push(&_root);
+
+	while (!stack.IsEmpty())
+	{
+		TreeNode<T>** pNode = stack.Top();
+
+		if ((*pNode)->_rightChild != nullptr)
+		{
+			stack.Push(&(*pNode)->_rightChild);
+		}
+
+		if ((*pNode)->_leftChild != nullptr)
+		{
+			stack.Push(&(*pNode)->_leftChild);
+		}
+
+		if ((*pNode)->_leftChild == nullptr && (*pNode)->_rightChild == nullptr)
+		{
+			stack.Pop();
+			delete *pNode;
+			*pNode = nullptr;
+		}
+
+	}
 }
 
 template<class T>
@@ -484,7 +520,7 @@ inline TreeNode<T>* BinTree<T>::removeElement(TreeNode<T>* pRoot, T elem)
 		return pNode;
 	}
 
-	TreeNode<T>* pSuccessor = findMinNode(pRoot);
+	TreeNode<T>* pSuccessor = findMinNode(pRoot->_rightChild);
 	pRoot->_data = pSuccessor->_data;
 	pRoot->_leftChild = pSuccessor->_leftChild;
 	
