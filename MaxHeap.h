@@ -8,12 +8,15 @@ class MaxHeap
 public:
 	MaxHeap();
 	MaxHeap(int capacity);
+	MaxHeap(const MyArray<T>& data);
 	virtual ~MaxHeap();
 	int GetSize();
 	bool IsEmpty();
 	void Add(T elem);
 	T FindMaxValue();
 	T ExtractMaxValue();
+	//取出堆中的最大元素，并用新元素elem替换
+	T Replace(T elem);
 
 private:
 	int parentIndex(int idx);
@@ -36,6 +39,16 @@ template<class T>
 MaxHeap<T>::MaxHeap(int capacity)
 {
 	_array = new MyArray<T>(capacity);
+}
+
+template<class T>
+MaxHeap<T>::MaxHeap(const MyArray<T>& data)
+{
+	_array = new MyArray<T>(data);
+	for (int i = _array->GetSize() - 1; i >= 0; i--)
+	{
+		siftDown(i);
+	}
 }
 
 template<class T>
@@ -83,6 +96,15 @@ T MaxHeap<T>::ExtractMaxValue()
 	_array->RemoveLast();
 	siftDown(0);
 	return maxValue;
+}
+
+template<class T>
+T MaxHeap<T>::Replace(T elem)
+{
+	T value = FindMaxValue();
+	_array->Set(0, elem);
+	siftDown(0);
+	return value;
 }
 
 template<class T>

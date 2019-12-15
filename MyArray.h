@@ -31,6 +31,7 @@ public:
 	T GetFirstElem();
 
 	void Swap(int idx1, int idx2);
+	void Set(int idx, T elem);
 
 private:
 	bool IsVailed(int pos)const;
@@ -290,6 +291,16 @@ void MyArray<T>::Swap(int idx1, int idx2)
 	T tmpElem = _data[idx1];
 	_data[idx1] = _data[idx2];
 	_data[idx2] = tmpElem;
+}
+
+template<class T>
+void MyArray<T>::Set(int idx, T elem)
+{
+	if (idx < 0 || idx >= _size)
+	{
+		throw "Index Error";
+	}
+	_data[idx] = elem;
 }
 
 template<class T>
