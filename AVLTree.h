@@ -17,6 +17,7 @@ public:
 	int GetSize() { return _size; }
 	bool IsEmpty() { return _size == 0; }
 	bool IsBST();
+	bool IsBalance();
 
 private:
 	struct TreeNode
@@ -235,6 +236,22 @@ private:
 		inOrder(pNode->_rightChild, list);
 	}
 
+	bool checkBalance(TreeNode* pNode)
+	{
+		if (pNode == nullptr)
+		{
+			return true;
+		}
+
+		int balance = getBalanceFactor(pNode);
+		if (balance > 1)
+		{
+			return false;
+		}
+
+		return checkBalance(pNode->_leftChild) && checkBalance(pNode->_rightChild);
+	}
+
 private:
 	TreeNode* _root = nullptr;
 	int _size;
@@ -307,4 +324,10 @@ bool AVLTree<K, V>::IsBST()
 		}
 	}
 	return true;
+}
+
+template<class K, class V>
+bool AVLTree<K, V>::IsBalance()
+{
+	return checkBalance(_root);
 }
