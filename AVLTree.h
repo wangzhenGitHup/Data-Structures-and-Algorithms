@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include "ArrayStack.h"
+#include "MyArray.h"
 
 template<class K, class V>
 class AVLTree
@@ -15,6 +16,7 @@ public:
 	void Set(K key, V value);
 	int GetSize() { return _size; }
 	bool IsEmpty() { return _size == 0; }
+	bool IsBST();
 
 private:
 	struct TreeNode
@@ -64,6 +66,7 @@ private:
 		pRoot->_height = 1 + (leftH > rightH ? leftH : rightH);
 
 		//看下是否平衡
+
 		int balance = getBalanceFactor(pRoot);
 		if (balance > 1)
 		{
@@ -220,6 +223,18 @@ private:
 		return getHeight(pNode->_leftChild) - getHeight(pNode->_rightChild);
 	}
 
+	void inOrder(TreeNode* pNode, MyArray<K>& list)
+	{
+		if (pNode == nullptr)
+		{
+			return;
+		}
+
+		inOrder(pNode->_leftChild, list);
+		list.AddLast(pNode->_key);
+		inOrder(pNode->_rightChild, list);
+	}
+
 private:
 	TreeNode* _root = nullptr;
 	int _size;
@@ -276,4 +291,20 @@ void AVLTree<K, V>::Set(K key, V value)
 		throw "Without this Key!";
 	}
 	pNode->_value = key;
+}
+
+template<class K, class V>
+bool AVLTree<K, V>::IsBST()
+{
+	MyArray<K> list = MyArray<K>();
+	inOrder(_root, list);
+	int len = list.GetSize();
+	for (int i = 1; i < len; i++)
+	{
+		if (list.GetData(i - 1) > list.GetData(i))
+		{
+			return false;
+		}
+	}
+	return true;
 }
