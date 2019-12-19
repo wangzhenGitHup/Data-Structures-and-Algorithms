@@ -252,6 +252,24 @@ private:
 		return checkBalance(pNode->_leftChild) && checkBalance(pNode->_rightChild);
 	}
 
+	TreeNode* rightRotate(TreeNode* pNode)
+	{
+		TreeNode* xNode = pNode->_leftChild;
+		TreeNode* xRNode = xNode->_rightChild;
+		xRNode->_rightChild = pNode;
+		pNode->_leftChild = xRNode;
+
+		int leftH = getHeight(pNode->_leftChild);
+		int rightH = getHeight(pNode->_rightChild);
+		pNode->_height = leftH > rightH ? (leftH + 1) : (rightH + 1);
+
+		leftH = getHeight(xNode->_leftChild);
+		rightH = getHeight(xNode->_rightChild);
+		xNode->_height = leftH > rightH ? (leftH + 1) : (rightH + 1);
+
+		return xNode;
+	}
+
 private:
 	TreeNode* _root = nullptr;
 	int _size;
