@@ -67,12 +67,19 @@ private:
 		pRoot->_height = 1 + (leftH > rightH ? leftH : rightH);
 
 		//看下是否平衡
-
 		int balance = getBalanceFactor(pRoot);
-		if (balance > 1 && getBalanceFactor(pRoot->_leftChild))
+		//左边不平衡
+		if (balance > 1 && getBalanceFactor(pRoot->_leftChild) >= 0)
 		{
 			return rightRotate(pRoot);
 		}
+
+		//右边不平衡
+		if (balance < -1 && getBalanceFactor(pRoot->_rightChild) <= 0)
+		{
+			return leftRotate(pRoot);
+		}
+
 		return pRoot;
 	}
 
