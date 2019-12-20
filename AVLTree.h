@@ -69,9 +69,9 @@ private:
 		//看下是否平衡
 
 		int balance = getBalanceFactor(pRoot);
-		if (balance > 1)
+		if (balance > 1 && getBalanceFactor(pRoot->_leftChild))
 		{
-
+			return rightRotate(pRoot);
 		}
 		return pRoot;
 	}
@@ -268,6 +268,24 @@ private:
 		xNode->_height = leftH > rightH ? (leftH + 1) : (rightH + 1);
 
 		return xNode;
+	}
+
+	TreeNode* leftRotate(TreeNode* pNode)
+	{
+		TreeNode* yNode = pNode->_rightChild;
+		TreeNode* yLNode = yNode->_leftChild;
+		yNode->_leftChild = pNode;
+		pNode->_rightChild = yLNode;
+
+		int leftH = getHeight(pNode->_leftChild);
+		int rightH = getHeight(pNode->_rightChild);
+		pNode->_height = leftH > rightH ? (leftH + 1) : (rightH + 1);
+
+		leftH = getHeight(yNode->_leftChild);
+		rightH = getHeight(yNode->_rightChild);
+		yNode->_height = leftH > rightH ? (leftH + 1) : (rightH + 1);
+
+		return yNode;
 	}
 
 private:
