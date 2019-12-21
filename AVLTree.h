@@ -80,6 +80,19 @@ private:
 			return leftRotate(pRoot);
 		}
 
+		//LR
+		if (balance > 1 && getBalanceFactor(pRoot->_leftChild) < 0)
+		{
+			pRoot->_leftChild = leftRotate(pRoot->_leftChild);
+			return rightRotate(pRoot);
+		}
+
+		//RL
+		if (balance < -1 && getBalanceFactor(pRoot->_rightChild) > 0)
+		{
+			pRoot->_rightChild = rightRotate(pRoot->_rightChild);
+			return leftRotate(pRoot);
+		}
 		return pRoot;
 	}
 
