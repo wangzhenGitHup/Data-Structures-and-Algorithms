@@ -143,16 +143,18 @@ private:
 			return nullptr;
 		}
 
+		TreeNode* retNode = nullptr;
+
 		if (key < pRoot->_key)
 		{
 			pRoot->_leftChild = remove(pRoot->_leftChild, key);
-			return pRoot;
+			retNode = pRoot;
 		}
 
 		if (key > pRoot->_key)
 		{
 			pRoot->_rightChild = remove(pRoot->_rightChild, key);
-			return pRoot;
+			retNode = pRoot;
 		}
 
 		if (pRoot->_leftChild == nullptr)
@@ -161,25 +163,59 @@ private:
 			delete pRoot;
 			pRoot = nullptr;
 			_size--;
-			return pNode;
+			retNode = pNode;
 		}
-
-		if (pRoot->_rightChild == nullptr)
+		else if (pRoot->_rightChild == nullptr)
 		{
 			TreeNode* pNode = pRoot->_leftChild;
 			delete pRoot;
 			pRoot = nullptr;
 			_size--;
-			return pNode;
+			retNode = pNode;
+		}
+		else
+		{
+			TreeNode* pMinNode = findMinNode(pRoot->_rightChild);
+			pRoot->_key = pMinNode->_key;
+			pRoot->_value = pMinNode->_value;
+			delete pMinNode;
+			pMinNode = nullptr;
+			_size--;
+			retNode = pRoot;
 		}
 
-		TreeNode* pMinNode = findMinNode(pRoot->_rightChild);
-		pRoot->_key = pMinNode->_key;
-		pRoot->_value = pMinNode->_value;
-		delete pMinNode;
-		pMinNode = nullptr;
-		_size--;
-		return nullptr;
+		int leftH = getHeight(retNode->_leftChild);
+		int rightH = getHeight(retNode->_rightChild);
+		retNode->_height = 1 + (leftH > rightH ? leftH : rightH);
+
+		//看下是否平衡
+		int balance = getBalanceFactor(retNode);
+		//左边不平衡
+		if (balance > 1 && getBalanceFactor(retNode->_leftChild) >= 0)
+		{
+			return rightRotate(retNode);
+		}
+
+		//右边不平衡
+		if (balance < -1 && getBalanceFactor(retNode->_rightChild) <= 0)
+		{
+			return leftRotate(retNode);
+		}
+
+		//LR
+		if (balance > 1 && getBalanceFactor(retNode->_leftChild) < 0)
+		{
+			retNode->_leftChild = leftRotate(retNode->_leftChild);
+			return rightRotate(retNode);
+		}
+
+		//RL
+		if (balance < -1 && getBalanceFactor(retNode->_rightChild) > 0)
+		{
+			retNode->_rightChild = rightRotate(retNode->_rightChild);
+			return leftRotate(retNode);
+		}
+		return retNode;
 	}
 
 	void remove(TreeNode* pRoot)
