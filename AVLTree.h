@@ -150,38 +150,44 @@ private:
 			pRoot->_leftChild = remove(pRoot->_leftChild, key);
 			retNode = pRoot;
 		}
-
-		if (key > pRoot->_key)
+		else if (key > pRoot->_key)
 		{
 			pRoot->_rightChild = remove(pRoot->_rightChild, key);
 			retNode = pRoot;
 		}
-
-		if (pRoot->_leftChild == nullptr)
-		{
-			TreeNode* pNode = pRoot->_rightChild;
-			delete pRoot;
-			pRoot = nullptr;
-			_size--;
-			retNode = pNode;
-		}
-		else if (pRoot->_rightChild == nullptr)
-		{
-			TreeNode* pNode = pRoot->_leftChild;
-			delete pRoot;
-			pRoot = nullptr;
-			_size--;
-			retNode = pNode;
-		}
 		else
 		{
-			TreeNode* pMinNode = findMinNode(pRoot->_rightChild);
-			pRoot->_key = pMinNode->_key;
-			pRoot->_value = pMinNode->_value;
-			delete pMinNode;
-			pMinNode = nullptr;
-			_size--;
-			retNode = pRoot;
+			if (pRoot->_leftChild == nullptr)
+			{
+				TreeNode* pNode = pRoot->_rightChild;
+				delete pRoot;
+				pRoot = nullptr;
+				_size--;
+				retNode = pNode;
+			}
+			else if (pRoot->_rightChild == nullptr)
+			{
+				TreeNode* pNode = pRoot->_leftChild;
+				delete pRoot;
+				pRoot = nullptr;
+				_size--;
+				retNode = pNode;
+			}
+			else
+			{
+				TreeNode* pMinNode = findMinNode(pRoot->_rightChild);
+				pRoot->_key = pMinNode->_key;
+				pRoot->_value = pMinNode->_value;
+				delete pMinNode;
+				pMinNode = nullptr;
+				_size--;
+				retNode = pRoot;
+			}
+		}
+		
+		if (retNode == nullptr)
+		{
+			return nullptr;
 		}
 
 		int leftH = getHeight(retNode->_leftChild);
