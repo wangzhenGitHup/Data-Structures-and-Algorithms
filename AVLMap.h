@@ -18,7 +18,7 @@ public:
 	bool IsEmpty();
 
 private:
-	AVLTree* _tree = nullptr;
+	AVLTree<K, V>* _tree = nullptr;
 };
 
 template<class K, class V>
