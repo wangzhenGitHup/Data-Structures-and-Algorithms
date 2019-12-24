@@ -64,6 +64,29 @@ private:
 
 		return pRoot->_color;
 	}
+	/*
+			pNode                          y
+		   /     \                        / \
+		  /       \        ×óÐý×ª         /   \
+	     x         y     --------->    pNode  b
+		          / \                  / \
+				 /   \                /   \
+				a     b              x     a
+	*/
+	TreeNode* leftRotate(TreeNode* pNode)
+	{
+		TreeNode* pRNode = pNode->_rightChild;
+		TreeNode* pRLNode = pRNode->_leftChild;
+
+		pNode->_rightChild = pRLNode;
+		pRNode->_leftChild = pNode;
+
+		pRNode->_color = pNode->_color;
+		pNode->_color = RED;
+
+		return pRNode;
+	}
+
 private:
 	TreeNode* _root = nullptr;
 	int _size;
@@ -96,4 +119,5 @@ template<class K, class V>
 void RBTree<K, V>::Add(K key, V value)
 {
 	_root = addChild(_root, key, value);
+	_root->_color = BLACK;
 }
