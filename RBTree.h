@@ -87,6 +87,29 @@ private:
 		return pRNode;
 	}
 
+	/*
+			pNode                          x
+		   /     \                        / \
+		  /       \        ÓÒÐý×ª         /   \
+		 x         y     --------->     a     pNode
+		/ \		                             /  \
+	   /   \	                            /    \
+	  a		b        				        b    y  
+
+	*/
+	TreeNode* rightRotate(TreeNode* pNode)
+	{
+		TreeNode* pLNode = pNode->_leftChild;
+		TreeNode* pLRNode = pLNode->_rightChild;
+		pNode->_leftChild = pLRNode;
+		pLNode->_rightChild = pNode;
+
+		pLNode->_color = pNode->_color;
+		pNode->_color = RED;
+
+		return pLNode;
+	}
+
 	void flipColor(TreeNode* pNode)
 	{
 		pNode->_color = RED;
