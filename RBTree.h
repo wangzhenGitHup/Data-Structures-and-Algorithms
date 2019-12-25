@@ -87,6 +87,13 @@ private:
 		return pRNode;
 	}
 
+	void flipColor(TreeNode* pNode)
+	{
+		pNode->_color = RED;
+		pNode->_leftChild->_color = BLACK;
+		pNode->_rightChild->_color = BLACK;
+	}
+
 private:
 	TreeNode* _root = nullptr;
 	int _size;
