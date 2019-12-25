@@ -405,7 +405,7 @@ void AVLTree<K, V>::Set(K key, V value)
 	{
 		throw "Without this Key!";
 	}
-	pNode->_value = key;
+	pNode->_value = value;
 }
 
 template<class K, class V>
