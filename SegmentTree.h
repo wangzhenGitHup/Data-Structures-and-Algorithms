@@ -12,6 +12,7 @@ public:
 private:
 	int leftChild(int idx);
 	int rightChild(int idx);
+	void buildSegmentTree(int treeIdx, int leftIdx, int rightIdx);
 
 private:
 	const int _MulitiNum = 4;
@@ -31,6 +32,8 @@ SegmentTree<T>::SegmentTree(const T* data, int len)
 	_size = len;
 
 	_tree = new T[_MulitiNum * len];
+
+	buildSegmentTree(0, 0, _size - 1);
 }
 
 template<class T>
@@ -70,4 +73,23 @@ template<class T>
 int SegmentTree<T>::rightChild(int idx)
 {
 	return (idx << 1) + 2;
+}
+
+template<class T>
+void SegmentTree<T>::buildSegmentTree(int treeIdx, int leftIdx, int rightIdx)
+{
+	if (leftIdx == rightIdx)
+	{
+		_tree[treeIdx] = _array[leftIdx];
+		return;
+	}
+
+	int leftTreeIdx = leftChild(treeIdx);
+	int rightTreeIdx = leftChild(treeIdx);
+	int mid = leftIdx + (rightIdx - 1) / 2;
+
+	buildSegmentTree(leftTreeIdx, leftIdx, mide);
+	buildSegmentTree(rightTreeIdx, mid + 1, rightIdx);
+
+	_tree[treeIdx] = _tree[leftTreeIdx] + _tree[rightTreeIdx];
 }
