@@ -9,12 +9,14 @@ public:
 	int GetSize();
 	T GetData(int idx);
 	T Query(int queryLeft, int queryRight);
+	void Update(int idx, T elem);
 
 private:
 	int leftChild(int idx);
 	int rightChild(int idx);
 	void buildSegmentTree(int treeIdx, int leftIdx, int rightIdx);
 	T query(int treeIdx, int rangeLeft, int rangeRight, int queryLeft, int queryRight);
+	void set(int treeIdx, int rangeLeft, int rangeRight, int idx, T elem);
 
 private:
 	const int _MulitiNum = 4;
@@ -79,6 +81,18 @@ T SegmentTree<T>::Query(int queryLeft, int queryRight)
 }
 
 template<class T>
+void SegmentTree<T>::Update(int idx, T elem)
+{
+	if (idx < 0 || idx >= _size - 1)
+	{
+		return;
+	}
+
+	_array[idx] = elem;
+	set(0, 0, _size - 1, idx, elem);
+}
+
+template<class T>
 int SegmentTree<T>::leftChild(int idx)
 {
 	return (idx << 1) + 1;
@@ -137,4 +151,29 @@ T SegmentTree<T>::query(int treeIdx,
 	T rightRet = query(treeRightIdx, mid + 1, rangeRight, mid + 1, queryRight);
 
 	return leftRet + rightRet;
+}
+
+template<class T>
+void SegmentTree<T>::set(int treeIdx, int rangeLeft, int rangeRight, int idx, T elem)
+{
+	if (rangeLeft == rangeRight)
+	{
+		_tree[treeIdx] = elem;
+		return;
+	}
+
+	int mid = rangeLeft + (rangeRight - 1) / 2;
+	int treeLeftChild = leftChild(treeIdx);
+	int treeRightChild = rightChild(treeIdx);
+
+	if (idx >= mid + 1)
+	{
+		set(treeRightChild, mid + 1, rangeRight, idx, elem);
+	}
+	else
+	{
+		set(treeLeftChild, rangeLeft, mid, idx, elem);
+	}
+
+	_tree[treeIdx] = _tree[treeLeftChild] + _tree[treeRightChild];
 }
