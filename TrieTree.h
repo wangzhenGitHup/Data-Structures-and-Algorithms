@@ -9,7 +9,8 @@ public:
 	TrieTree();
 	~TrieTree();
 	int GetSize() { return _size; }
-	void Add(std::string word);
+	void Add(std::string& word);
+	bool Contains(std::string& word);
 
 private:
 	struct TrieNode
@@ -30,7 +31,7 @@ private:
 		}
 	};
 
-	void add(std::string word)
+	void add(std::string& word)
 	{
 		TrieNode* pCur = _root;
 		for (int i = 0; i < word.size(); i++)
@@ -50,7 +51,25 @@ private:
 			_size++;
 		}
 	}
+
+	bool contains(std::string& word)
+	{
+		TrieNode* pNode = _root;
+		for (int i = 0; i < word.size(); i++)
+		{
+			char ch = word[i];
+			if (pNode->m_next->GetValue(ch) == nullptr)
+			{
+				return false;
+			}
+
+			pNode = pNode->m_next->GetValue(ch);
+		}
+
+		return pNode->m_isWord;
+	}
 	
+private:
 	TrieNode* _root = nullptr;
 	int _size = 0;
 };
@@ -66,7 +85,12 @@ TrieTree::~TrieTree()
 {
 }
 
-void TrieTree::Add(std::string word)
+void TrieTree::Add(std::string& word)
 {
-	
+	add(word);
+}
+
+bool TrieTree::Contains(std::string & word)
+{
+	return contains(word);
 }
