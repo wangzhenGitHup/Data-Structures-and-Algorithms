@@ -11,6 +11,7 @@ public:
 	int GetSize() { return _size; }
 	void Add(std::string& word);
 	bool Contains(std::string& word);
+	bool IsPrefix(std::string& prefix);
 
 private:
 	struct TrieNode
@@ -69,6 +70,23 @@ private:
 		return pNode->m_isWord;
 	}
 	
+	bool isPrefix(std::string& prefix)
+	{
+		TrieNode* pNode = _root;
+		for (int i = 0; i < prefix.size(); i++)
+		{
+			char ch = prefix[i];
+			if (pNode->m_next->GetValue(ch) == nullptr)
+			{
+				return false;
+			}
+
+			pNode = pNode->m_next->GetValue(ch);
+		}
+
+		return true;
+	}
+
 private:
 	TrieNode* _root = nullptr;
 	int _size = 0;
