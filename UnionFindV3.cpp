@@ -55,6 +55,7 @@ int UnionFindV3::find(int p)
 
 	while (p != m_parent[p])
 	{
+		m_parent[p] = m_parent[m_parent[p]];
 		p = m_parent[p];
 	}
 
