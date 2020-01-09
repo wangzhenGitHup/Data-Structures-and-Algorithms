@@ -6,10 +6,11 @@
 
 namespace SortTestHelper
 {
-	std::shared_ptr<int[]> GeneratorRandomArray(int count, int rangeLeft, int rangeRight)
+	template<typename T>
+	std::shared_ptr<T[]> GeneratorRandomArray(int count, int rangeLeft, int rangeRight)
 	{
 		//int* pArray = new int[count];
-		std::shared_ptr<int[]> pArray(new int[count]);
+		std::shared_ptr<T[]> pArray(new int[count]);
 
 		srand(time(NULL));
 		for (int i = 0; i < count; i++)
@@ -47,4 +48,16 @@ namespace SortTestHelper
 		assert(isSorted(arr, n));
 		std::cout << sortName << ": " << double(endTime - startTime) / CLOCKS_PER_SEC << "s\n";
 	}
+
+	template<typename T>
+	std::shared_ptr<T[]> CopyArrayElement(std::shared_ptr<T[]>& pArray, int len)
+	{
+		std::shared_ptr<T[]> arrayData(new T[len]);
+		for (int i = 0; i < len; i++)
+		{
+			arrayData[i] = pArray[i];
+		}
+		return arrayData;
+	}
+
 }
