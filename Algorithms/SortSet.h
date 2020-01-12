@@ -45,3 +45,46 @@ void insertSort(T arr[], int len)
 		arr[j] = tmpElem;
 	}
 }
+
+template<typename T>
+void bubbleSort(T arr[], int len)
+{
+	for (int i = 0; i < len - 1; i++)
+	{
+		bool isSort = true;
+		for (int j = len - 1; j > i; j--)
+		{
+			if (arr[j - 1] > arr[j])
+			{
+				std::swap(arr[j - 1], arr[j]);
+				isSort = false;
+			}
+		}
+
+		if (isSort)
+		{
+			break;
+		}
+	}
+}
+
+template<typename T>
+void shellSort(T arr[], int len)
+{
+	int n = len >> 1;
+	while (n > 0)
+	{
+		for (int i = n; i < len; i++)
+		{
+			T tmpElem = arr[i];
+			int j = i;
+			for (j = i; j > 0 && arr[j - 1] > tmpElem; j--)
+			{
+				arr[j] = arr[j - 1];
+			}
+
+			arr[j] = tmpElem;
+		}
+		n = n >> 1;
+	}
+}
