@@ -35,9 +35,13 @@ void insertSort(T arr[], int len)
 {
 	for (int i = 1; i < len; i++)
 	{
-		for (int j = i; j > 0 && arr[j] < arr[j - 1]; j--)
+		T tmpElem = arr[i];
+		int j = i;
+		for (j = i; j > 0 && arr[j - 1] > tmpElem; j--)
 		{
-			std::swap(arr[j], arr[j - 1]);
+			arr[j] = arr[j - 1];
 		}
+
+		arr[j] = tmpElem;
 	}
 }
