@@ -37,12 +37,28 @@ void insertSort(T arr[], int len)
 	{
 		T tmpElem = arr[i];
 		int j = i;
-		for (j = i; j > 0 && arr[j - 1] > tmpElem; j--)
+		for (; j > 0 && arr[j - 1] > tmpElem; j--)
 		{
 			arr[j] = arr[j - 1];
 		}
 
 		arr[j] = tmpElem;
+	}
+}
+
+template<typename T>
+void insertSort(T arr[], int left, int right)
+{
+	for (int i = left + 1; i <= right; i++)
+	{
+		T elem = arr[i];
+		int j = i;
+		for (; j > left && arr[j - 1] > elem; j--)
+		{
+			arr[j] = arr[j - 1];
+		}
+
+		arr[j] = elem;
 	}
 }
 
@@ -99,20 +115,24 @@ public:
 	}
 
 private:
-	static void __mergeSort(T arr[], unsigned long left, unsigned long right)
+	static void __mergeSort(T arr[], int left, int right)
 	{
-		if (left >= right)
+		if (right - left <= 100)
 		{
+			insertSort(arr, left, right);
 			return;
 		}
 
-		unsigned long mid = (left + right) >> 1;
+		int mid = (left + right) >> 1;
 		__mergeSort(arr, left, mid);
 		__mergeSort(arr, mid + 1, right);
-		__merge(arr, left, mid, right);
+		if (arr[mid] > arr[mid + 1])
+		{
+			__merge(arr, left, mid, right);
+		}
 	}
 
-	static void __merge(T arr[], unsigned long left, unsigned long mid, unsigned long right)
+	static void __merge(T arr[], int left, int mid, int right)
 	{
 		T *tmpSpace = new T[right - left + 1];
 		int i = left;
@@ -123,8 +143,8 @@ private:
 		}
 
 		i = left;
-		unsigned long j = mid + 1;
-		for (unsigned long k = left; k <= right; k++)
+		int j = mid + 1;
+		for (int k = left; k <= right; k++)
 		{
 			if (i > mid)
 			{
