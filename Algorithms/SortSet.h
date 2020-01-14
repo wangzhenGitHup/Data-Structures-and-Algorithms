@@ -88,3 +88,66 @@ void shellSort(T arr[], int len)
 		n = n >> 1;
 	}
 }
+
+template<class T>
+class MergeSort
+{
+public:
+	static void mergeSort(T arr[], int len)
+	{
+		__mergeSort(arr, 0, len - 1);
+	}
+
+private:
+	static void __mergeSort(T arr[], unsigned long left, unsigned long right)
+	{
+		if (left >= right)
+		{
+			return;
+		}
+
+		unsigned long mid = (left + right) >> 1;
+		__mergeSort(arr, left, mid);
+		__mergeSort(arr, mid + 1, right);
+		__merge(arr, left, mid, right);
+	}
+
+	static void __merge(T arr[], unsigned long left, unsigned long mid, unsigned long right)
+	{
+		T *tmpSpace = new T[right - left + 1];
+		int i = left;
+
+		for (; i <= right; i++)
+		{
+			tmpSpace[i - left] = arr[i];
+		}
+
+		i = left;
+		unsigned long j = mid + 1;
+		for (unsigned long k = left; k <= right; k++)
+		{
+			if (i > mid)
+			{
+				arr[k] = tmpSpace[j - left];
+				j++;
+			}
+			else if (j > right)
+			{
+				arr[k] = tmpSpace[i - left];
+				i++;
+			}
+			else if(tmpSpace[i - left] < tmpSpace[j - left])
+			{ 
+				arr[k] = tmpSpace[i - left];
+				i++;
+			}
+			else
+			{
+				arr[k] = tmpSpace[j - left];
+				j++;
+			}
+		}
+
+		delete[] tmpSpace;
+	}
+};
