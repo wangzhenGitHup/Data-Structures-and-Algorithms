@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <ctime>
 
 template<typename T>
 void show(T arr[], int len)
@@ -169,5 +170,46 @@ private:
 		}
 
 		delete[] tmpSpace;
+	}
+};
+
+template<class T>
+class QuickSort
+{
+public:
+	static void Sort(T arr[], int len)
+	{
+		srand(time(NULL));
+		__sort(arr, 0, len - 1);
+	}
+
+private:
+	static void __sort(T arr[], int left, int right)
+	{
+		if (left >= right)
+		{
+			return;
+		}
+
+		int pos = __partition(arr, left, right);
+		__sort(arr, left, pos - 1);
+		__sort(arr, pos + 1, right);
+	}
+
+	static int __partition(T arr[], int left, int right)
+	{
+		std::swap(arr[left], arr[rand() % (right - left + 1) + left]);
+		T tmpElem = arr[left];
+		int j = left;
+		for (int i = left + 1; i <= right; i++)
+		{
+			if (arr[i] < tmpElem)
+			{
+				std::swap(arr[++j], arr[i]);
+			}
+		}
+
+		std::swap(arr[left], arr[j]);
+		return j;
 	}
 };
