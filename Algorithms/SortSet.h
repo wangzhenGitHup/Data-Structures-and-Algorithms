@@ -112,64 +112,61 @@ class MergeSort
 public:
 	static void mergeSort(T arr[], int len)
 	{
-		__mergeSort(arr, 0, len - 1);
+		T *tempArr = new T[len];
+		__mergeSort(arr, tempArr, 0, len - 1);
+		delete tempArr;
 	}
 
 private:
-	static void __mergeSort(T arr[], int left, int right)
+	static void __mergeSort(T arr[], T tempArr[], int startIdx, int endIdx)
 	{
-		if (right - left <= 100)
+		if (endIdx - startIdx <= 100)
 		{
-			insertSort(arr, left, right);
+			insertSort(arr, startIdx, endIdx);
 			return;
 		}
 
-		int mid = (left + right) >> 1;
-		__mergeSort(arr, left, mid);
-		__mergeSort(arr, mid + 1, right);
-		if (arr[mid] > arr[mid + 1])
+		//中部下标
+		int midIdx = startIdx + ((endIdx - startIdx) >> 1);
+
+		__mergeSort(arr, tempArr, startIdx, midIdx);
+		__mergeSort(arr, tempArr, midIdx + 1, endIdx);
+		if (arr[midIdx] > arr[midIdx + 1])
 		{
-			__merge(arr, left, mid, right);
+			__merge(arr, tempArr, startIdx, midIdx, endIdx);
 		}
 	}
 
-	static void __merge(T arr[], int left, int mid, int right)
+	static void __merge(T arr[], T tempArr[], int startIdx, int midIdx, int endIdx)
 	{
-		T *tmpSpace = new T[right - left + 1];
-		int i = left;
-
-		for (; i <= right; i++)
+		//复制要合并的数据
+		for (int i = startIdx; i <= endIdx; i++)
 		{
-			tmpSpace[i - left] = arr[i];
+			tempArr[i] = arr[i];
 		}
 
-		i = left;
-		int j = mid + 1;
-		for (int k = left; k <= right; k++)
+		int left = startIdx; //左边首位下标
+		int right = midIdx + 1; //右边首位下标
+
+		for (int k = startIdx; k <= endIdx; k++)
 		{
-			if (i > mid)
+			if (left > midIdx) //如果左边的首位下标大于中部下标，证明左边的数据已经排序完了
 			{
-				arr[k] = tmpSpace[j - left];
-				j++;
+				arr[k] = tempArr[right++];
 			}
-			else if (j > right)
+			else if (right > endIdx)
 			{
-				arr[k] = tmpSpace[i - left];
-				i++;
+				arr[k] = tempArr[left++]; //如果右边的首位下标大于数组长度，证明右边的数据已经排序完了
 			}
-			else if(tmpSpace[i - left] < tmpSpace[j - left])
-			{ 
-				arr[k] = tmpSpace[i - left];
-				i++;
+			else if (tempArr[right] < tempArr[left])
+			{
+				arr[k] = tempArr[right++]; //将右边的首位排入，然后右边的下标指针自增
 			}
 			else
 			{
-				arr[k] = tmpSpace[j - left];
-				j++;
+				arr[k] = tempArr[left++]; //将左边的首位排入，然后左边的下标指针自增
 			}
 		}
-
-		delete[] tmpSpace;
 	}
 };
 
