@@ -181,32 +181,57 @@ public:
 	}
 
 private:
-	static void __sort(T arr[], int left, int right)
+	static void __sort(T arr[], int startIdx, int endIdx)
 	{
-		if (left >= right)
+		if (startIdx >= endIdx)
 		{
 			return;
 		}
 
-		int pos = __partition(arr, left, right);
-		__sort(arr, left, pos - 1);
-		__sort(arr, pos + 1, right);
+		int pivotIdx = __partition2(arr, startIdx, endIdx);
+		__sort(arr, startIdx, pivotIdx - 1);
+		__sort(arr, pivotIdx + 1, endIdx);
 	}
 
-	static int __partition(T arr[], int left, int right)
+	static int __partition2(T arr[], int startIdx, int endIdx)
 	{
-		std::swap(arr[left], arr[rand() % (right - left + 1) + left]);
-		T tmpElem = arr[left];
-		int j = left;
-		for (int i = left + 1; i <= right; i++)
+		std::swap(arr[startIdx], arr[rand() % (endIdx - startIdx + 1) + startIdx]);
+		T pivotElem = arr[startIdx];
+		int leftIdx = startIdx;
+		int rightIdx = endIdx;
+		
+		while(true)
 		{
-			if (arr[i] < tmpElem)
+			//从左往右扫描
+			while(arr[leftIdx] <= pivotElem)
 			{
-				std::swap(arr[++j], arr[i]);
+				leftIdx++;
+				if(leftIdx == rightIdx)
+				{
+					break;
+				}
 			}
+			
+			//从右往左扫描
+			while(pivotElem < arr[rightIdx])
+			{
+				rightIdx--;
+				if(leftIdx == rightIdx)
+				{
+					break;
+				}
+			}
+			
+			//左右下标相遇
+			if(leftIdx >= rightIdx)
+			{
+				break;
+			}
+			
+			std::swap(arr[leftIdx], arr[rightIdx]);
 		}
-
-		std::swap(arr[left], arr[j]);
-		return j;
-	}
+		
+		//将基准值插入序列
+		std::swap(arr[startIdx], arr[rightIdx]);
+		return rightIdx;
 };
