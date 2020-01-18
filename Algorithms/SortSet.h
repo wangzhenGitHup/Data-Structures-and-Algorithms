@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <ctime>
+#include<cassert>
 
 template<typename T>
 void show(T arr[], int len)
@@ -199,39 +200,113 @@ private:
 		T pivotElem = arr[startIdx];
 		int leftIdx = startIdx;
 		int rightIdx = endIdx;
-		
-		while(true)
+
+		while (true)
 		{
 			//从左往右扫描
-			while(arr[leftIdx] <= pivotElem)
+			while (arr[leftIdx] <= pivotElem)
 			{
 				leftIdx++;
-				if(leftIdx == rightIdx)
+				if (leftIdx == rightIdx)
 				{
 					break;
 				}
 			}
-			
+
 			//从右往左扫描
-			while(pivotElem < arr[rightIdx])
+			while (pivotElem < arr[rightIdx])
 			{
 				rightIdx--;
-				if(leftIdx == rightIdx)
+				if (leftIdx == rightIdx)
 				{
 					break;
 				}
 			}
-			
+
 			//左右下标相遇
-			if(leftIdx >= rightIdx)
+			if (leftIdx >= rightIdx)
 			{
 				break;
 			}
-			
+
 			std::swap(arr[leftIdx], arr[rightIdx]);
 		}
-		
+
 		//将基准值插入序列
 		std::swap(arr[startIdx], arr[rightIdx]);
 		return rightIdx;
+	}
+};
+
+template<class Item>
+class MaxHeap
+{
+public:
+	explicit MaxHeap(unsigned int capacity)
+	{
+		m_capacity = capacity;
+		m_data = new Item[capacity + 1];
+		m_size = 0;
+	}
+
+	~MaxHeap()
+	{
+		delete[] m_data;
+		m_data = nullptr;
+	}
+
+	unsigned int GetSize() { return m_size; }
+	bool IsEmpty() { return m_size == 0; }
+	void Insert(Item item)
+	{
+		assert(m_capacity > m_size + 1);
+		m_data[++m_size] = item;
+		shiftUp(m_size);
+	}
+
+	Item ExtractMax()
+	{
+		assert(m_size > 0);
+		Item ret = m_data[1];
+		std::swap(m_data[1], m_data[m_size]);
+		m_size--;
+		shiftDown(1);
+		return ret;
+	}
+
+private:
+	void shiftUp(unsigned int idx)
+	{
+		while (idx > 1 && m_data[idx / 2] < m_data[idx])
+		{
+			std::swap(m_data[idx / 2], m_data[idx]);
+			idx /= 2;
+		}
+	}
+
+	void shiftDown(unsigned int idx)
+	{
+		while ((idx << 1) <= m_size)
+		{
+			unsigned int childIdx = idx << 1;
+			if (childIdx + 1 <= m_size &&
+				m_data[childIdx + 1] > m_data[childIdx])
+			{
+				childIdx += 1;
+			}
+
+			if (m_data[idx] >= m_data[childIdx])
+			{
+				break;
+			}
+
+			std::swap(m_data[idx], m_data[childIdx]);
+			idx = childIdx;
+		}
+	}
+
+private:
+	Item* m_data;
+	unsigned int m_size;
+	unsigned int m_capacity;
 };
