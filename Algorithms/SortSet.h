@@ -249,6 +249,23 @@ public:
 		m_size = 0;
 	}
 
+	MaxHeap(Item arr[], unsigned int n)
+	{
+		m_data = new Item[n + 1];
+		m_capacity = n;
+		m_size = n;
+		for (unsigned int i = 0; i < n; i++)
+		{
+			m_data[i + 1] = arr[i];
+		}
+
+		for (unsigned int idx = m_size / 2; idx >= 1; idx--)
+		{
+			shiftDown(idx);
+		}
+		
+	}
+
 	~MaxHeap()
 	{
 		delete[] m_data;
@@ -310,3 +327,13 @@ private:
 	unsigned int m_size;
 	unsigned int m_capacity;
 };
+
+template<typename T>
+void heapSort(T arr[], unsigned int n)
+{
+	MaxHeap<T> maxHeap = MaxHeap<T>(arr, n);
+	for (unsigned int i = n - 1; i >= 0; i--)
+	{
+		arr[i] = maxHeap.ExtractMax();
+	}
+}
