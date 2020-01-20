@@ -251,7 +251,8 @@ public:
 
 	MaxHeap(Item arr[], unsigned int n)
 	{
-		m_data = new Item[n + 1];
+		
+
 		m_capacity = n;
 		m_size = n;
 		for (unsigned int i = 0; i < n; i++)
@@ -337,3 +338,46 @@ void heapSort(T arr[], unsigned int n)
 		arr[i] = maxHeap.ExtractMax();
 	}
 }
+
+template<class T>
+class HeapSort
+{
+public:
+	static void sort(T arr[], unsigned int n)
+	{
+		for (unsigned int i = (n - 1) / 2; i >= 0; i--)
+		{
+			__shiftDown(arr, n, i);
+		}
+
+		for (unsigned int i = n - 1; i > 0; i--)
+		{
+			std::swap(arr[0], arr[i]);
+			__shiftDown(arr, i, 0);
+		}
+	}
+
+
+private:
+	static void __shiftDown(T arr[], unsigned int n, unsigned int idx)
+	{
+		while ((idx << 1) + 1 < n)
+		{
+			unsigned int childIdx = (idx << 1) + 1;
+			if (childIdx + 1 < n &&
+				arr[childIdx + 1] > arr[childIdx])
+			{
+				childIdx += 1;
+			}
+
+			if (arr[idx] >= arr[childIdx])
+			{
+				break;
+			}
+
+			std::swap(arr[idx], arr[childIdx]);
+			idx = childIdx;
+		}
+	}
+};
+
