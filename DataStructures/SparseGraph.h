@@ -16,6 +16,7 @@ public:
 
 	void CreateEdge(int v1, int v2);
 	bool HasEdge(int v1, int v2);
+	void Show();
 
 	class AdjIterator
 	{

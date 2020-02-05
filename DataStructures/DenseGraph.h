@@ -3,7 +3,7 @@
 #include<vector>
 
 /*
-	³íÃÜÍ¼
+	³íÃÜÍ¼-----ÁÚ½Ó¾ØÕó
 */
 class DenseGraph
 {
@@ -18,6 +18,7 @@ public:
 	int GetEdge() { return m_edge; }
 	void CreateEdge(int v1, int v2);
 	bool HasEdge(int v1, int v2);
+	void Show();
 
 	class AdjIterator
 	{

@@ -1,5 +1,6 @@
 #include "SparseGraph.h"
 #include<cassert>
+#include<iostream>
 
 SparseGraph::SparseGraph(int v, bool isDirected)
 {
@@ -35,4 +36,17 @@ bool SparseGraph::HasEdge(int v1, int v2)
 		}
 	}
 	return false;
+}
+
+void SparseGraph::Show()
+{
+	for (int i = 0; i < m_vertex; i++)
+	{
+		std::cout << "vertex " << i << ":\t";
+		for (int j = 0; j < m_graph[i].size(); j++)
+		{
+			std::cout << m_graph[i][j] << "\t";
+		}
+		std::cout << std::endl;
+	}
 }

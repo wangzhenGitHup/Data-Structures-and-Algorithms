@@ -1,5 +1,6 @@
 #include "DenseGraph.h"
 #include<cassert>
+#include<iostream>
 
 DenseGraph::DenseGraph(int v, bool isDirected)
 {
@@ -29,4 +30,16 @@ bool DenseGraph::HasEdge(int v1, int v2)
 	assert(v1 >= 0 && v1 < m_vertex);
 	assert(v2 >= 0 && v2 < m_vertex);
 	return m_graph[v1][v2];
+}
+
+void DenseGraph::Show()
+{
+	for (int i = 0; i < m_vertex; i++)
+	{
+		for (int j = 0; j < m_vertex; j++)
+		{
+			std::cout << m_graph[i][j] << "\t";
+		}
+		std::cout << std::endl;
+	}
 }
