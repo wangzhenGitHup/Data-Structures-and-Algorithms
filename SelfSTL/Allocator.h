@@ -18,13 +18,13 @@ namespace SelfSTL
 		static void destroy(T* ptr);
 		static void destroy(T* first, T* last);
 
-		typedef T         m_value_type;
-		typedef T*        m_ptr;
-		typedef const T*  m_const_ptr;
-		typedef T&        m_ref;
-		typedef const T&  m_const_ref;
-		typedef size_t    m_size;
-		typedef ptrdiff_t m_difference_type;
+		typedef T         allocator_value_type;
+		typedef T*        allocator_ptr;
+		typedef const T*  allocator_const_ptr;
+		typedef T&        allocator_ref;
+		typedef const T&  allocator_const_ref;
+		typedef size_t    allocator_size;
+		typedef ptrdiff_t allocator_difference_type;
 	};
 
 	template<class T>
