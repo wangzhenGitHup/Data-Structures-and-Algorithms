@@ -28,8 +28,8 @@ namespace SelfSTL
 		};
 
 		static obj* free_list[FreeLists::FREELISTS];
-		static char* start_free; //内存池起始位置
-		static char* end_free; //内存池结束位置
+		static char* start_free; //内存池起始位置，只在chunk_alloc()中变化
+		static char* end_free; //内存池结束位置，只在chunk_alloc()中变化
 		static size_t heap_size;
 
 		//将bytes上调至8的倍数
@@ -38,7 +38,7 @@ namespace SelfSTL
 			return ((bytes + Align::ALIGN - 1) & ~(Align::ALIGN - 1));
 		}
 
-		//根据区块大小，决定使用第n号free-list，n从0开始计算
+		//根据区块大小，决定使用第n号free-list，n从1开始计算
 		static size_t free_list_index(size_t bytes)
 		{
 			return (((bytes + Align::ALIGN - 1) / Align::ALIGN - 1));
