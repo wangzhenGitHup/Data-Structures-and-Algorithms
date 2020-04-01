@@ -24,7 +24,7 @@ namespace SelfSTL
 		//没有的话，就将区块大小上调至8的倍数边界,然后调用return_fill()
 		size_t idx = free_list_index(bytes);
 		obj* list = free_list[idx];
-		if (list != nullptr)
+		if (list != 0)
 		{
 			free_list[idx] = list->next;
 			return list;
@@ -68,8 +68,8 @@ namespace SelfSTL
 			return chunk;
 		}
 
-		obj* cur_obj = nullptr;
-		obj* next_obj = nullptr;
+		obj* cur_obj = 0;
+		obj* next_obj = 0;
 		obj** tmp_free_list = free_list + free_list_index(bytes);
 		
 		//这一块准备返回给客户端
@@ -85,7 +85,7 @@ namespace SelfSTL
 			next_obj = (obj*)((char*)next_obj + bytes);
 			if (objs - 1 == i)
 			{
-				cur_obj->next = nullptr;
+				cur_obj->next = 0;
 				break;
 			}
 			else
@@ -99,7 +99,7 @@ namespace SelfSTL
 
 	char* Alloc::chunk_alloc(size_t bytes, size_t& objs)
 	{
-		char* ret = nullptr;
+		char* ret = 0;
 		size_t total_bytes = bytes * objs;
 		size_t bytes_left = end_free - start_free;
 
@@ -140,15 +140,15 @@ namespace SelfSTL
 		//堆空间不足，malloc()失败
 		if (!start_free)
 		{	
-			obj** tmp_free_list = nullptr;
-			obj* ptr = nullptr;
+			obj** tmp_free_list = 0;
+			obj* ptr = 0;
 			//搜寻尚有未用的区块，且区块够大的 free list
 			for (int i = 0; i <= MaxBytes::MAXTYPES; i += Align::ALIGN)
 			{
 				tmp_free_list = free_list + free_list_index(i);
 				ptr = *tmp_free_list;
 				//free list尚有未用的区块
-				if (ptr != nullptr)
+				if (ptr != 0)
 				{
 					//调整free list 释放出未用区块
 					*tmp_free_list = ptr->next;
@@ -160,7 +160,7 @@ namespace SelfSTL
 			}
 			
 			//出现意外，到处都没有内存可用了
-			end_free = nullptr;
+			end_free = 0;
 		}
 
 		heap_size += bytes_to_get;
