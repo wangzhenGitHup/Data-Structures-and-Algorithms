@@ -91,11 +91,110 @@ namespace SelfSTL
 			return base()[-n - 1];
 		}
 
-		reverse_iterator_t operator+(difference_type n)const;
-		reverse_iterator_t& operator+=(difference_type n);
-		reverse_iterator_t operator-(difference_type n)const;
-		reverse_iterator_t& operator-=(difference_type n);
+		reverse_iterator_t operator+(difference_type n)const
+		{
+			reverse_iterator_t res = *this;
+			res += n;
+			return res;
+		}
 
+		reverse_iterator_t& operator+=(difference_type n)
+		{
+			base__ == advanceNStep(base__, n, false, iterator_category());
+			cur__ = advanceNStep(cur__, n, false, iterator_category());
+			return *this;
+		}
+
+		reverse_iterator_t operator-(difference_type n)const
+		{
+			reverse_iterator_t res = *this;
+			res += n;
+			return res;
+		}
+
+		reverse_iterator_t& operator-=(difference_type n)
+		{
+			base__ = advanceNStep(base__, n, false, iterator_category());
+			cur__ = advanceNStep(cur__, n, false, iterator_category());
+			return *this;
+		}
+
+		friend bool operator==(const reverse_iterator_t<Iterator>& lhs, const reverse_iterator_t<Iterator>& rhs)
+		{
+			return lhs.cur__ == rhs.cur__;
+		}
+
+		friend bool operator!=(const reverse_iterator_t<Iterator>& lhs, reverse_iterator_t<Iterator>& rhs)
+		{
+			return !(lhs == rhs);
+		}
+
+		friend bool operator<(const reverse_iterator_t<Iterator>& lhs, const reverse_iterator_t<Iterator>& rhs)
+		{
+			return lhs.cur__ < rhs.cur__;
+		}
+
+		friend bool operator<=(const reverse_iterator_t<Iterator>& lhs, const reverse_iterator_t<Iterator>& rhs)
+		{
+			return !(lhs > rhs);
+		}
+
+		friend bool operator>(const reverse_iterator_t<Iterator>& lhs, const reverse_iterator_t<Iterator>& rhs)
+		{
+			return lhs.cur__ > rhs.cur__;
+		}
+
+		friend bool operator>=(const reverse_iterator_t<Iterator>& lhs, const reverse_iterator_t<Iterator>& rhs)
+		{
+			return !(lhs < rhs);
+		}
+
+		friend reverse_iterator_t operator+(typename reverse_iterator_t<Iterator>::difference_type n, const reverse_iterator_t<Iterator>& rev_it)
+		{
+			return rev_it + n;
+		}
+
+		friend typename reverse_iterator_t<Iterator>::difference_type operator-(const reverse_iterator_t<Iterator>& lhs, const reverse_iterator_t<Iterator>& rhs)
+		{
+			return lhs.cur__ - rhs.cur__;
+		}
+
+	private:
+		Iterator advanceNStep(Iterator it, difference_type n, bool bRight, random_access_iterator_tag)
+		{
+			if (bRight)
+			{
+				it += n;
+			}
+			else
+			{
+				it -= n;
+			}
+
+			return it;
+		}
+
+		Iterator advanceNStep(Iterator it, difference_type n, bool bRight, bidirectional_iterator_tag)
+		{
+			difference_type i;
+			difference_type absN = n >= 0 ? n : -n;
+			if ((bRight && n > 0) || (!bRight && n < 0))
+			{
+				for (i = 0; i != absN; i++)
+				{
+					it = it + 1;
+				}
+			}
+			else if ((!bRight && n > 0) || (bRight && n < 0))
+			{
+				for (i = 0; i != absN; i++)
+				{
+					it = it - 1;
+				}
+			}
+
+			return it;
+		}
 
 	private:
 		Iterator base__;
