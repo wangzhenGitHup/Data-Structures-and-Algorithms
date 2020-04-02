@@ -45,7 +45,7 @@ namespace SelfSTL
 		}
 
 		//返回一个大小为n的对象，并可能键入大小为n的其他区块到free-list
-		static void* return_fill(size_t n);
+		static void* reset_fill(size_t n);
 
 		//配置一大块空间，可容纳objs个大小为size的区块，如果配置objs个区块有所不便，objs可能会降低
 		static char* chunk_alloc(size_t size, size_t& objs);

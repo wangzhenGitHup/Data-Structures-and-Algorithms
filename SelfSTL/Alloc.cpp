@@ -21,7 +21,6 @@ namespace SelfSTL
 		}
 
 		//检查对应的free list，如果free list内有可用的区块，就直接拿来用；
-		//没有的话，就将区块大小上调至8的倍数边界,然后调用return_fill()
 		size_t idx = free_list_index(bytes);
 		obj* list = free_list[idx];
 		if (list != 0)
@@ -30,7 +29,8 @@ namespace SelfSTL
 			return list;
 		}
 
-		return return_fill(round_up(bytes));
+		//没有的话，重新填充free list
+		return reset_fill(round_up(bytes));
 	}
 
 	void Alloc::deallocate(void* ptr, size_t bytes)
@@ -55,7 +55,7 @@ namespace SelfSTL
 		return ptr;
 	}
 
-	void* Alloc::return_fill(size_t bytes)
+	void* Alloc::reset_fill(size_t bytes)
 	{
 		size_t objs = Objs::OBJS;
 
@@ -79,7 +79,7 @@ namespace SelfSTL
 		*tmp_free_list = next_obj = (obj*)(chunk + bytes);
 
 		//将取出的多余的空间加入到相应的freelist里面去
-		for (int i = 1; ; i++)
+		for (int i = 1; ; i++)//从1开始，因为第0个将返回给客户端
 		{
 			cur_obj = next_obj;
 			next_obj = (obj*)((char*)next_obj + bytes);
