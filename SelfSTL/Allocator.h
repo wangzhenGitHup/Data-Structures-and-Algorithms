@@ -41,7 +41,7 @@ namespace SelfSTL
 			return nullptr;
 		}
 
-		return static_cast<T*>(Alloc::allocate(sizeof(T) * n));
+		return static_cast<T*>(Alloc::allocates(sizeof(T)* n));
 	}
 
 	template<class T>
