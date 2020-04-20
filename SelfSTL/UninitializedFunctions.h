@@ -19,7 +19,7 @@ namespace SelfSTL
 		ForwardIterator result)
 	{
 		typedef typename _type_traits<iterator_traits<InputIterator>::value_type>::is_POD_type isPOD_Type;
-		return _uninitialized_copy_aux(first, result, isPOD_Type());
+		return _uninitialized_copy_aux(first, last, result, isPOD_Type());
 	}
 
 	template<class InputIterator, class ForwardIterator>

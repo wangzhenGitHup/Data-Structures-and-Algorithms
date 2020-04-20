@@ -20,7 +20,7 @@ namespace SelfSTL
 	public:
 		reverse_iterator_t() : base_(nullptr), cur_(nullptr){}
 
-		explicit reverse_iterator_t(const iterator_type& it) : base__(it)
+		explicit reverse_iterator_t(const iterator_type& it) : base_(it)
 		{
 			auto temp = it;
 			cur_ = --temp;
