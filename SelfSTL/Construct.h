@@ -31,7 +31,7 @@ namespace SelfSTL{
 		}
 	}
 
-	template<class ForwardIerator>
+	template<class ForwardIterator>
 	void destroy(ForwardIterator first, ForwardIterator last)
 	{
 		typedef typename _type_traits<ForwardIterator>::is_POD_type is_POD_type;
