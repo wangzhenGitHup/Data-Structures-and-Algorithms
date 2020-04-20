@@ -18,37 +18,38 @@ namespace SelfSTL
 		typedef const reference											const_reference;
 
 	public:
-		reverse_iterator_t() : base__(nullptr), cur__(nullptr){}
+		reverse_iterator_t() : base_(nullptr), cur_(nullptr){}
+
 		explicit reverse_iterator_t(const iterator_type& it) : base__(it)
 		{
 			auto temp = it;
-			cur__ = --temp;
+			cur_ = --temp;
 		}
 
 		template<class Iter>
 		reverse_iterator_t(const reverse_iterator_t<Iter>& rev_it)
 		{
-			base__ = (iterator_type)rev_it.base();
-			auto temp = base__;
-			cur__ = --temp;
+			base_ = (iterator_type)rev_it.base();
+			auto temp = base_;
+			cur_ = --temp;
 		}
 
 		iterator_type base()
 		{
-			return base__;
+			return base_;
 		}
 
 		reference operator*()
 		{
-			return (*cur__);
+			return (*cur_);
 		}
 
 		const_reference operator*()const
 		{
-			return (*cur__);
+			return (*cur_);
 		}
 
-		pointer oprator->()
+		pointer operator->()
 		{
 			return &(operator*());
 		}
@@ -60,8 +61,8 @@ namespace SelfSTL
 
 		reverse_iterator_t& operator++()
 		{
-			--base__;
-			--cur__;
+			--base_;
+			--cur_;
 			return *this;
 		}
 
@@ -74,8 +75,8 @@ namespace SelfSTL
 
 		reverse_iterator_t& operator--()
 		{
-			++base__;
-			++cur__;
+			++base_;
+			++cur_;
 			return *this;
 		}
 
@@ -100,8 +101,8 @@ namespace SelfSTL
 
 		reverse_iterator_t& operator+=(difference_type n)
 		{
-			base__ == advanceNStep(base__, n, false, iterator_category());
-			cur__ = advanceNStep(cur__, n, false, iterator_category());
+			base_ == advanceNStep(base_, n, false, iterator_category());
+			cur_ = advanceNStep(cur_, n, false, iterator_category());
 			return *this;
 		}
 
@@ -114,14 +115,14 @@ namespace SelfSTL
 
 		reverse_iterator_t& operator-=(difference_type n)
 		{
-			base__ = advanceNStep(base__, n, false, iterator_category());
-			cur__ = advanceNStep(cur__, n, false, iterator_category());
+			base_ = advanceNStep(base_, n, false, iterator_category());
+			cur_ = advanceNStep(cur_, n, false, iterator_category());
 			return *this;
 		}
 
 		friend bool operator==(const reverse_iterator_t<Iterator>& lhs, const reverse_iterator_t<Iterator>& rhs)
 		{
-			return lhs.cur__ == rhs.cur__;
+			return lhs.cur_ == rhs.cur_;
 		}
 
 		friend bool operator!=(const reverse_iterator_t<Iterator>& lhs, reverse_iterator_t<Iterator>& rhs)
@@ -131,7 +132,7 @@ namespace SelfSTL
 
 		friend bool operator<(const reverse_iterator_t<Iterator>& lhs, const reverse_iterator_t<Iterator>& rhs)
 		{
-			return lhs.cur__ < rhs.cur__;
+			return lhs.cur_ < rhs.cur_;
 		}
 
 		friend bool operator<=(const reverse_iterator_t<Iterator>& lhs, const reverse_iterator_t<Iterator>& rhs)
@@ -141,7 +142,7 @@ namespace SelfSTL
 
 		friend bool operator>(const reverse_iterator_t<Iterator>& lhs, const reverse_iterator_t<Iterator>& rhs)
 		{
-			return lhs.cur__ > rhs.cur__;
+			return lhs.cur_ > rhs.cur_;
 		}
 
 		friend bool operator>=(const reverse_iterator_t<Iterator>& lhs, const reverse_iterator_t<Iterator>& rhs)
@@ -156,7 +157,7 @@ namespace SelfSTL
 
 		friend typename reverse_iterator_t<Iterator>::difference_type operator-(const reverse_iterator_t<Iterator>& lhs, const reverse_iterator_t<Iterator>& rhs)
 		{
-			return lhs.cur__ - rhs.cur__;
+			return lhs.cur_ - rhs.cur_;
 		}
 
 	private:
@@ -197,7 +198,7 @@ namespace SelfSTL
 		}
 
 	private:
-		Iterator base__;
-		Iterator cur__;
+		Iterator base_;
+		Iterator cur_;
 	};
 }
