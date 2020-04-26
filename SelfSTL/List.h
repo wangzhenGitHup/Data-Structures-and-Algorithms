@@ -130,6 +130,7 @@ namespace SelfSTL
 		iterator erase(iterator first, iterator last);
 		void swap(List& list);
 		void clear();
+		
 		void splice(iterator position, List& list);
 		void splice(iterator position, List& list, iterator it);
 		void splice(iterator position, List& list, iterator first, iterator last);
@@ -154,6 +155,7 @@ namespace SelfSTL
 		void reverse();
 
 	private:
+		void transfer(iterator position, iterator first, iterator last);
 		void ctorAux(size_type n, const value_type& val, std::true_type);
 
 		template<class InputIterator>
