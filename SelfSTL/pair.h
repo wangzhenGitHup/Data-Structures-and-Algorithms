@@ -16,15 +16,15 @@ namespace SelfSTL
 		template<class U, class V>
 		pair(const pair<U, V>& p) : first(p.first), second(p.second) {}
 
-		bool operator==(const pair<T1, T2>& x, const pair<T1, T2>& y)
+		bool operator==(const pair<T1, T2>& x)
 		{
-			return x.first == y.first && x.second == y.second;
+			return x.first == first && x.second == second;
 		}
 
-		bool operator<(const pair<T1, T2>& x, const pair<T1, T2>& y)
+		bool operator<(const pair<T1, T2>& x)
 		{
-			return x.first < y.first ||
-				(!(y.first < x.first) && x.second < y.second);
+			return x.first < first ||
+				(!(first < x.first) && x.second < second);
 		}
 	};
 
