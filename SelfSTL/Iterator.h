@@ -82,11 +82,11 @@ namespace SelfSTL
 	template<class Iterator>
 	struct iterator_traits
 	{
-		typedef typename Iterator::iterator_category  iterator_category;
-		typedef typename Iterator::value_type  value_type;
-		typedef typename Iterator::difference_type  difference_type;
-		typedef typename Iterator::pointer pointer;
-		typedef typename Iterator::reference  reference;
+		typedef typename Iterator::iterator_category	iterator_category;
+		typedef typename Iterator::value_type			value_type;
+		typedef typename Iterator::difference_type		difference_type;
+		typedef typename Iterator::pointer				pointer;
+		typedef typename Iterator::reference			reference;
 	};
 
 	/*ÌØ»¯°æ±¾*/
@@ -132,13 +132,13 @@ namespace SelfSTL
 	}
 
 	template<class Iterator>
-	typename iterator_traits<Iterator>::difference_type distance(Iterator pso1, Iterator pos2)
+	typename iterator_traits<Iterator>::difference_type distance(Iterator pos1, Iterator pos2)
 	{
 		return distance(pos1, pos2, iterator_traits<Iterator>::iterator_category());
 	}
 
 	template<class Iterator>
-	typename iterator_traits<Iterator>::difference_type distance(Iterator pso1, Iterator pos2, random_access_iterator_tag)
+	typename iterator_traits<Iterator>::difference_type distance(Iterator pos1, Iterator pos2, random_access_iterator_tag)
 	{
 		return pos2 - pos1;
 	}
