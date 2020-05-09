@@ -677,5 +677,119 @@ namespace SelfSTL
 		const int ret = memcmp(first1, first2, min(len1, len2));
 		return ret != 0 ? ret < 0 : len1 < len2;
 	}
+
+
+	/*************mismatch******************/
+	template<class InputIterator1, class InputIterator2>
+	pair<InputIterator1, InputIterator2> mismatch(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2)
+	{
+		while (first1 != last1 && *first1 == *first2)
+		{
+			++first1;
+			++first2;
+		}
+
+		return pair<InputIterator1, InputIterator2>(first1, first2);
+	}
+
+	template<class InputIterator1, class InputIterator2, class BinaryPredicate>
+	pair<InputIterator1, InputIterator2>mismatch(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, BinaryPredicate pred)
+	{
+		while (first1 != last1 && pred(*first1, *first2))
+		{
+			++first1;
+			++first2;
+		}
+
+		return pair<InputIterator1, InputIterator2>(first1, first2);
+	}
+
+
+	/*************copy******************/
+	template<class InputIterator, class OutputIterator>
+	OutputIterator copy(InputIterator first, InputIterator last, OutputIterator ret)
+	{
+		return __copy_dispatch<InputIterator, OutputIterator>()(first, last, ret);
+	}
+
+	template<class InputIterator, class OutputIterator>
+	struct __copy_dispatch
+	{
+		OutputIterator operator()(InputIterator first, InputIterator last, OutputIterator ret)
+		{
+			return __copy(first, last, ret, iterator_category(first));
+		}
+	};
+
+	template<class T>
+	struct __copy_dispatch<T*, T*>
+	{
+		T* operator()(T* first, T* last, T* ret)
+		{
+			typedef typename _type_traits<T>::has_trivial_assignment_operator func;
+			return __copy_t(first, last, ret, func());
+		}
+	};
+
+	template<class T>
+	struct __copy_dispatch<const T*, T*>
+	{
+		T* operator()(const T* first, const T* last, T* ret)
+		{
+			typedef typename _type_traits<T>::has_trivial_assignment_operator func;
+			return _copy_t(first, last, ret, func());
+		}
+	};
+
+
+	template<class InputIterator, class OutputIterator>
+	OutputIterator __copy(InputIterator first, InputIterator last, OutputIterator ret, input_iterator_tag)
+	{
+		for (; first != last; ++first, ++ret)
+		{
+			*ret = *first;
+		}
+
+		return ret;
+	}
+
+	template<class RandomAccessIterator, class OutputIterator>
+	OutputIterator __copy(RandomAccessIterator first, RandomAccessIterator last, OutputIterator ret, random_access_iterator_tag)
+	{
+		return __copy_d(first, last, ret, distance_type(first));
+	}
+
+	template<class RandomAccessIterator, class OutputIterator, class Distance>
+	OutputIterator __copy_d(RandomAccessIterator first, RandomAccessIterator last, OutputIterator ret, Distance*)
+	{
+		for (Distance n = last - first; n > 0; --n, ++ret, ++first)
+		{
+			*ret = *first;
+		}
+
+		return ret;
+	}
+
+	template<class T>
+	T* __copy_t(const T* first, const T* last, T* ret, _true_type)
+	{
+		memmove(ret, first, sizeof(T) * (last - first));
+		return ret + (last - first);
+	}
+
+	template<class T>
+	T* __copy_t(const T* first, const T* last, T* ret, _false_type)
+	{
+		return __copy_d(first, last, ret, (ptrdiff_t*)0);
+	}
+
+	char* copy(const char* first, const char* last, char* ret)
+	{
+		memmove(ret, first, last - first);
+		return ret + (last - first);
+	}
+
+
+
 	/**********Complexity: O(N)**************************/
 }
