@@ -790,6 +790,359 @@ namespace SelfSTL
 	}
 
 
+	/*************set²Ù×÷******************/
+	template<class InputIterator1, class InputIterator2, class OutputIterator>
+	OutputIterator set_union(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator ret)
+	{
+		while (first1 != last1 && first2 != last2)
+		{
+			if (*first1 < *first2)
+			{
+				*ret = *first2;
+				++first2;
+			}
+			else if (*first2 < *first1)
+			{
+				*ret = *first2;
+				++first2;
+			}
+			else
+			{
+				*ret = *first1;
+				++first1;
+				++first2;
+			}
+
+			++ret;
+		}
+
+		return copy(first2, last2, copy(first1, last1, ret));
+	}
+
+	template<class InputIterator1, class InputIterator2, class OutputIterator>
+	OutputIterator set_intersection(InputIterator1 first1, InputIterator last1, InputIterator2 first2, InputIterator2 last2, OutputIterator ret)
+	{
+		while (first1 != last1 && first2 != last2)
+		{
+			if (*first1 < *first2)
+			{
+				++first1;
+			}
+			else if (*first2 < *first1)
+			{
+				++first2;
+			}
+			else
+			{
+				*ret = *first1;
+				++first1;
+				++first2;
+				++ret;
+			}
+
+			return ret;
+		}
+	}
+
+	template<class InputIterator1, class InputIterator2, class OutputIterator>
+	OutputIterator set_difference(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator ret)
+	{
+		while (first1 != last1 && first2 != last2)
+		{
+			if (*first1 < *first2)
+			{
+				*ret = *first1;
+				++first1;
+				++ret;
+			}
+			else if (*first2 < *first1)
+			{
+				++first2;
+			}
+			else
+			{
+				++first1;
+				++first2;
+			}
+
+			return copy(first1, last1, ret);
+		}
+	}
+
+	template<class InputIterator1, class InputIterator2, class OutputIterator>
+	OutputIterator set_symmetric_difference(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator ret)
+	{
+		while (first1 != last1 && first2 != last2)
+		{
+			if (*first1 < *first2)
+			{
+				*ret = *first1;
+				++first1;
+				++ret;
+			}
+			else if (*first2 < *first1)
+			{
+				*ret = *first2;
+				++first2;
+				++ret;
+			}
+			else
+			{
+				++first1;
+				++first2;
+			}
+
+			return copy(first2, last2, copy(first1, last1, ret));
+		}
+	}
+
+
+	/**********Count**************************/
+	template<class InputIterator, class T>
+	typename iterator_traits<InputIterator>::difference_type count(InputIterator first, InputIterator last, const T& val)
+	{
+		typename iterator_traits<InputIterator>::difference_type n = 0;
+		for (; first != last; ++first)
+		{
+			if (*first == val)
+			{
+				++n;
+			}
+			return n;
+		}
+	}
+
+	template<class InputIterator, class T, class Size>
+	void count(InputIterator first, InputIterator last, const T& val, Size& n)
+	{
+		for (; first != last; ++first)
+		{
+			if (*first == val)
+			{
+				++n;
+			}
+		}
+	}
+
+	template<class InputIterator, class Predicate>
+	typename iterator_traits<InputIterator>::difference_type count_if(InputIterator first, InputIterator last, Predicate pred)
+	{
+		typename iterator_traits<InputIterator>::difference_type n = 0;
+		for (; first != last; ++first)
+		{
+			if (pred(*first))
+			{
+				++n;
+			}
+			return n;
+		}
+	}
+
+	template<class InputIterator, class Predicate, class Size>
+	void count_if(InputIterator first, InputIterator last, Predicate pred, Size& n)
+	{
+		for (; first != last; ++first)
+		{
+			if (pred(*first))
+			{
+				++n;
+			}
+		}
+	}
+
+	/**********generate**************************/
+	template<class ForwardIterator, class Generator>
+	void generate(ForwardIterator first, ForwardIterator last, Generator gen)
+	{
+		for (; first != last; ++first)
+		{
+			*first = gen();
+		}
+	}
+
+	template<class OutputIterator, class Size, class Generator>
+	OutputIterator generate_n(OutputIterator first, Size n, Generator gen)
+	{
+		for (; n > 0; --n, ++first)
+		{
+			*first = gen();
+		}
+
+		return first;
+	}
+
+
+	/**********includes**************************/
+	template<class InputIterator1, class InputIterator2>
+	bool includes(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2)
+	{
+		while (first1 != last1 && first2 != last2)
+		{
+			if (*first2 < *first1)
+			{
+				return false;
+			}
+			else if (*first1 < *first2)
+			{
+				++first1;
+			}
+			else
+			{
+				++first1;
+				++first2;
+			}
+		}
+
+		return first2 == last2;
+	}
+
+	template<class InputIterator1, class InputIterator2, class Compare>
+	bool includes(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, Compare comp)
+	{
+		while (first1 != last1 && first2 != last2)
+		{
+			if (comp(*first2, *first1))
+			{
+				return false;
+			}
+			else if (comp(*first1, *first2))
+			{
+				++first1;
+			}
+			else
+			{
+				++first1;
+				++first2;
+			}
+		}
+
+		return first2 == last2;
+	}
+
+
+	/**********max_element**************************/
+	template<class ForwardIterator>
+	ForwardIterator max_element(ForwardIterator first, ForwardIterator last)
+	{
+		if (first == last)
+		{
+			return first;
+		}
+
+		ForwardIterator ret = first;
+		while (++first != last)
+		{
+			if (*ret < *first)
+			{
+				ret = first;
+			}
+		}
+		return ret;
+	}
+
+	template<class ForwardIterator, class Compare>
+	ForwardIterator max_element(ForwardIterator first, ForwardIterator last, Compare comp)
+	{
+		if (first == last)
+		{
+			return first;
+		}
+
+		ForwardIterator ret = first;
+		while (++first != last)
+		{
+			if (comp(*ret, *first))
+			{
+				ret = first;
+			}
+		}
+		return ret;
+	}
+
+	/**********min_element**************************/
+	template<class ForwardIterator>
+	ForwardIterator min_elment(ForwardIterator first, ForwardIterator last)
+	{
+		if (first == last)
+		{
+			return first;
+		}
+
+		ForwardIterator ret = first;
+		while (++first != last)
+		{
+			if (*first < *ret)
+			{
+				ret = first;
+			}
+		}
+
+		return ret;
+	}
+
+	template<class ForwardIterator, class Compare>
+	ForwardIterator min_element(ForwardIterator first, ForwardIterator last, Compare comp)
+	{
+		if (first == last)
+		{
+			return first;
+		}
+
+		ForwardIterator ret = first;
+		while (++first != last)
+		{
+			if (comp(*first, *ret))
+			{
+				ret = first;
+			}
+		}
+
+		return ret;
+	}
+
+	/**********merge**************************/
+	template<class InputIterator1, class InputIterator2, class OutputIterator>
+	OutputIterator merge(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator ret)
+	{
+		while (first1 != last1 && first2 != last2)
+		{
+			if (*first2 < *first1)
+			{
+				*ret = *first2;
+				++first2;
+			}
+			else
+			{
+				*ret = *first1;
+				++first1;
+			}
+
+			++ret;
+		}
+
+		return copy(first2, last2, copy(first1, last1, ret));
+	}
+
+	template<class InputIterator1, class InputIterator2, class OutputIterator, class Compare>
+	OutputIterator merge(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, OutputIterator ret, Compare comp)
+	{
+		while (first1 != last1 && first2 != last2)
+		{
+			if (comp(*first2, *first1))
+			{
+				*ret = *first2;
+				++first2;
+			}
+			else
+			{
+				*ret = *first1;
+				++first1;
+			}
+			++ret;
+		}
+
+		return copy(first2, last2, copy(first1, last1, ret));
+	}
 
 	/**********Complexity: O(N)**************************/
 }
