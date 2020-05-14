@@ -1144,5 +1144,504 @@ namespace SelfSTL
 		return copy(first2, last2, copy(first1, last1, ret));
 	}
 
+	/**********partition**************************/
+	template<class BidirectionalIterator, class Predicate>
+	BidirectionIterator partition(BidirectionalIterator first, BidirectionalIterator last, Predicate pred)
+	{
+		while (true)
+		{
+			while (true)
+			{
+				if (first == last)
+				{
+					return first;
+				}
+				else if (pred(*first))
+				{
+					++first;
+				}
+				else
+				{
+					break;
+				}
+				
+				--last;
+			}
+
+			while (true)
+			{
+				if (first == last)
+				{
+					return first;
+				}
+				else if (!pred(*last))
+				{
+					--last;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			iter_swap(first, last);
+			++first;
+		}
+	}
+
+	/**********remove**************************/
+	template<class ForwardIterator, class T>
+	ForwardIterator remove(ForwardIterator first, ForwardIterator last, const T& val)
+	{
+		first = find(first, last, val);
+		ForwardIterator next = first;
+		return first == last ? first : remove_copy(++next, last, first, val);
+	}
+
+	template<class InputIterator, class OutputIterator, class T>
+	OutputIterator remove_copy(InputIterator first, InputIterator last, OutputIterator ret, const T& val)
+	{
+		for (; first != last; ++first)
+		{
+			if (*first != val)
+			{
+				*ret = *first;
+				++ret;
+			}
+		}
+
+		return ret;
+	}
+
+	template<class ForwardIterator, class Predicate>
+	ForwardIterator remove_if(ForwardIterator first, ForwardIterator last, Predicate pred)
+	{
+		first = find_if(first, last, pred);
+		ForwardIterator next = first;
+		return first == last ? first : remove_copy_if(++next, last, first, pred);
+	}
+
+	template<class InputIterator, class OutputIterator, class Predicate>
+	OutputIterator remove_copy_if(InputIterator first, InputIterator last, OutputIterator ret, Predicate pred)
+	{
+		for (; first != last; ++first)
+		{
+			if (!pred(*first))
+			{
+				*ret = *first;
+				++ret;
+			}
+		}
+		return ret;
+	}
+
+	/**********replace**************************/
+	template<class ForwardIterator, class T>
+	void replace(ForwardIterator first, ForwardIterator last, const T& oldVal, const T& newVal)
+	{
+		for (; first != last; ++first)
+		{
+			if (*first == oldVal)
+			{
+				*first = newVal;
+			}
+		}
+	}
+
+	template<class InputIterator, class OutputIterator, class T>
+	OutputIterator replace_copy(InputIterator first, InputIterator last, OutputIterator ret, const T& oldVal, const T& newVal)
+	{
+		for (; first != last; ++first, ++ret)
+		{
+			*ret = *first == oldVal ? newVal : *first;
+		}
+
+		return ret;
+	}
+
+	template<class ForwardIterator, class Predicate, class T>
+	void replace_if(ForwardIterator first, ForwardIterator last, Predicate pred, const T& newVal)
+	{
+		for (; first != last; ++first)
+		{
+			if (pred(*first))
+			{
+				*first = newVal;
+			}
+		}
+	}
+
+	template<class Iterator, class OutputIterator, class Predicate, class T>
+	OutputIterator replace_copy_if(Iterator first, Iterator last, OutputIterator ret, Predicate pred, const T& newVal)
+	{
+		for (; first != last; ++first, ++ret)
+		{
+			*ret = pred(*first) ? newVal : *first;
+		}
+
+		return ret;
+	}
+
+
+	/*******************reverse**************************/
+	template<class BidirectionalIterator>
+	void reverse(BidirectionalIterator first, BidirectionalIterator last)
+	{
+		__reverse(first, last, iterator_category(first));
+	}
+
+	template<class BidirectionalIterator>
+	void __reverse(BidirectionalIterator first, BidirectionalIterator last, bidirectional_iterator_tag)
+	{
+		while (true)
+		{
+			if (first == last || first == --last)
+			{
+				return;
+			}
+
+			iter_swap(first++, last);
+		}
+	}
+
+	template<class RandomAccessIterator>
+	void __reverse(RandomAccessIterator first, RandomAccessIterator last, random_access_iterator_tag)
+	{
+		while (first < last)
+		{
+			iter_swap(first++, --last);
+		}
+	}
+
+	template<class BidirectionalIterator, class OutputIterator>
+	OutputIterator reverse_copy(BidirectionalIterator first, BidirectionalIterator last, OutputIterator ret)
+	{
+		while (first != last)
+		{
+			--last;
+			*ret = *last;
+			++ret;
+		}
+
+		return ret;
+	}
+
+
+	/*******************rotate**************************/
+	template<class ForwardIterator>
+	void rotate(ForwardIterator first, ForwardIterator middle, ForwardIterator last)
+	{
+		if (first == middle || middle == last)
+		{
+			return;
+		}
+
+		__rotate(first, middle, last, distance_type(first), iterator_category(first));
+	}
+
+	template<class ForwardIterator, class Distance>
+	void __rotate(ForwardIterator first, ForwardIterator middle, ForwardIterator last, Distance*, forward_iterator_tag)
+	{
+		for (ForwardIterator it = middle;;)
+		{
+			iter_swap(first, it);
+			++first;
+			++it;
+			if (first == middle)
+			{
+				if (it == last)
+				{
+					return;
+				}
+			}
+			else if (it == last)
+			{
+				it = middle;
+			}
+		}
+	}
+
+	template<class BidirectionalIterator, class Distance>
+	void __rotate(BidirectionalIterator first, BidirectionalIterator middle, BidirectionalIterator last, Distance*, bidirectional_iterator_tag)
+	{
+		reverse(first, middle);
+		reverse(middle, last);
+		reverse(first, last);
+	}
+
+	template<class RandomAccessIterator, class Distance>
+	void __rotate(RandomAccessIterator first, RandomAccessIterator middle, RandomAccessIterator last, Distance*, random_access_iterator_tag)
+	{
+		Distance n = __gcd(last - first, middle - first);
+		while (n--)
+		{
+			__rotate_cycle(first, last, first + n, middle - first, value_type(first));
+		}
+	}
+
+	//最大公因子，利用辗转相除法
+	template<class EuclideanRingElement>
+	EuclideanRingElement __gcd(EuclideanRingElement m, EuclideanRingElement n)
+	{
+		while (n != 0)
+		{
+			EuclideanRingElement tmp = m % n;
+			m = n;
+			n = t;
+		}
+		return m;
+	}
+
+	template<class RandomAccessIterator, class Distance, class T>
+	void __rotate_cycle(RandomAccessIterator first, RandomAccessIterator last, RandomAccessIterator initial, Distance shift, T*)
+	{
+		T value = *initial;
+		RandomAccessIterator ptr1 = initial;
+		RandomAccessIterator ptr2 = ptr1 + shift;
+		while (ptr2 != initial)
+		{
+			*ptr1 = *ptr2;
+			ptr1 = ptr2;
+			if (last - ptr2 > shift)
+			{
+				ptr2 += shift;
+			}
+			else
+			{
+				ptr2 = first + (shift - (last - ptr2));
+			}
+		}
+
+		*ptr1 = value;
+	}
+
+
+	template<class ForwardIterator, class OuputIterator>
+	OutputIterator rotate_copy(ForwardIterator first, ForwardIterator middle, ForwardIterator last, OutputIterator ret)
+	{
+		return copy(first, middle, copy(middle, last, ret));
+	}
+
+
+	/*******************search**************************/
+	template<class ForwardIterator1, class ForwardIterator2>
+	ForwardIterator1 search(ForwardIterator1 first1, ForwardIterator1 last1, 
+		ForwardIterator2 first2, ForwardIterator2 last2)
+	{
+		return __search(first1, last1, first2, last2, distance_type(first1), distance_type(first2));
+	}
+
+	template<class ForwardIterator1, class ForwardIterator2, class Distance1, class Distance2>
+	ForwardIterator1 __search(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2, ForwardIterator2 last2, Distance1*, Distance2*)
+	{
+		Distance1 d1 = 0;
+		distance(first1, last1, d1);
+		Distance d2 = 0;
+		distance(first2, last2, d2);
+
+		if (d1 < d2)
+		{
+			return last1;
+		}
+
+		ForwardIterator1 current1 = first1;
+		ForwardIterator2 current2 = first2;
+
+		while (current2 != last2)
+		{
+			if (*current1 == *current2)
+			{
+				++current1;
+				++current2;
+			}
+			else
+			{
+				if (d1 == d2)
+				{
+					return last1;
+				}
+
+				current1 = ++first1;
+				current2 = first2;
+				--d1;
+			}
+		}
+
+		return first1;
+	}
+
+	template<class ForwardIterator, class Integer, class T>
+	ForwardIterator search_n(ForwardIterator first, ForwardIterator last, Integer count, const T& val)
+	{
+		if (count <= 0)
+		{
+			return first;
+		}
+
+		first = find(first, last, val);
+		while (first != last)
+		{
+			Integer n = count - 1;
+			ForwardIterator i = first;
+			++i;
+			while (i != last && n != 0 && *i == val)
+			{
+				++i;
+				--n;
+			}
+
+			if (n == 0)
+			{
+				return first;
+			}
+			first = find(i, last, val);
+		}
+
+		return last;
+	}
+
+	/*template<class FowardIterator, class Integer, class T, class BinaryPredicate>
+	ForwardIterator search_n(ForwardIterator first, ForwardIterator last, 
+		Integer cnt, const T& val, BinaryPredicate pred)
+	{
+		if (cnt <= 0)
+		{
+			return first;
+		}
+
+		while (first != last)
+		{
+			if (pred(*first, val))
+			{
+				break;
+			}
+			++first;
+		}
+
+		while (first != last)
+		{
+			Integer n = cnt - 1;
+			ForwardIterator it = first;
+			++it;
+
+			while (it != last && n != 0 && pred(*it, val))
+			{
+				++it;
+				--n;
+			}
+
+			if (n == 0)
+			{
+				return first;
+			}
+
+			while (it != last)
+			{
+				if (pred(*it, val))
+				{
+					break;
+				}
+				++it;
+			}
+
+			first = it;
+		}
+		
+		return last;
+	}*/
+
+	/**********swap_ranges**************************/
+	template<class ForwardIterator1, class ForwardIterator2>
+	ForwardIterator2 swap_ranges(ForwardIterator1 first1, ForwardIterator1 last1, ForwardIterator2 first2)
+	{
+		for (; first1 != last1; ++first1, ++first2)
+		{
+			iter_swap(first1, first2);
+		}
+		return first2;
+	}
+
+
+	/**********transform**************************/
+	template<class InputIterator, class OutputIterator, class UnaryOperation>
+	OutputIterator transform(InputIterator first, InputIterator last, OutputIterator ret, UnaryOperation op)
+	{
+		for (; first != last; ++first, ++ret)
+		{
+			*ret = op(*first);
+		}
+
+		return ret;
+	}
+
+	template<class InputIterator1, class InputIterator2, class OutputIterator, class BinaryOperation>
+	OutputIterator transform(InputIterator first, InputIterator last, OutputIterator ret, BinaryOperation op)
+	{
+		for (; first1 != last1; ++first1, ++first2, ++ret)
+		{
+			*ret = op(*first1, *first2);
+		}
+
+		return ret;
+	}
+
+
+
+	/**********unique**************************/
+	template<class ForwardIterator>
+	ForwardIterator unique(ForwardIterator first, ForwardIterator last)
+	{
+		first = adjacent_find(first, last);
+		return unique_copy(first, last, first);
+	}
+
+	template<class InputIterator, class OutputIterator>
+	OutputIterator unique_copy(InputIterator first, InputIterator last, OutputIterator ret)
+	{
+		if (first == last)
+		{
+			return ret;
+		}
+
+		return __unique_copy(first, last, ret, iterator_category(ret));
+	}
+
+	template<class InputIterator, class ForwardIterator>
+	ForwardIterator __unique_copy(InputIterator first, InputIterator last, ForwardIterator ret, forward_iterator_tag)
+	{
+		*ret = *first;
+		while (++first != last)
+		{
+			if (*ret != *first)
+			{
+				*(++ret) = *first;
+			}
+		}
+
+		return ++ret;
+	}
+
+	template<class InputIterator, class OutputIterator>
+	OutputIterator __unique_copy(InputIterator first, InputIterator last, OutputIterator ret, output_iterator_tag)
+	{
+		return __unique_copy(first, last, ret, value_type(first));
+	}
+
+	template<class InputIterator, class OutputIterator, class T>
+	OutputIterator __unique_copy(InputIterator first, InputIterator last, OutputIterator ret, T*)
+	{
+		T val = *first;
+		*ret = val;
+		while (++first != last)
+		{
+			if (val != *first)
+			{
+				val = *first;
+				*(++ret) = valu;
+			}
+		}
+
+		return ++ret;
+	}
 	/**********Complexity: O(N)**************************/
 }
